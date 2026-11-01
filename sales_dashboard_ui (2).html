@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            purple: '#8b5cf6',
+                            lightPurple: '#f3e8ff',
+                            pink: '#ec4899',
+                            teal: '#10b981',
+                            orange: '#f59e0b',
+                            bg: '#f8f9fb'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-[#f8f9fb] text-slate-700 font-sans antialiased overflow-x-hidden">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- ================= FAR-LEFT ICON SIDEBAR ================= -->
+        <aside class="w-16 bg-white border-r border-slate-100 flex flex-col justify-between items-center py-4 z-20 shrink-0 select-none">
+            <!-- Top Brand Logo -->
+            <div class="flex flex-col items-center space-y-6 w-full">
+                <a href="#" class="w-10 h-10 flex items-center justify-center rounded-xl">
+                    <!-- Custom Purple/Pink Wing Logo SVG -->
+                    <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 24C8 15 15 6 25 6C22 13 18 17 12 18C16 19 20 18 23 15C19 22 14 25 8 24Z" fill="url(#logoGrad)"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="8" y1="6" x2="25" y2="24" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#a855f7"/>
+                                <stop offset="1" stop-color="#ec4899"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </a>
+
+                <!-- Main Nav Icons -->
+                <nav class="flex flex-col items-center space-y-2 w-full px-2">
+                    <button class="w-10 h-10 rounded-xl bg-purple-100/80 text-[#8b5cf6] flex items-center justify-center transition">
+                        <i data-lucide="home" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="layout-grid" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="layers" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="file-text" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="component" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="gift" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="compass" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="store" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="trending-up" class="w-[18px] h-[18px]"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center transition">
+                        <i data-lucide="table-2" class="w-[18px] h-[18px]"></i>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Bottom Action Icons -->
+            <div class="flex flex-col items-center space-y-3">
+                <button class="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-50 flex items-center justify-center">
+                    <i data-lucide="moon" class="w-[18px] h-[18px]"></i>
+                </button>
+                <button class="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-50 flex items-center justify-center">
+                    <i data-lucide="log-out" class="w-[18px] h-[18px]"></i>
+                </button>
+                <button class="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-50 flex items-center justify-center">
+                    <i data-lucide="aperture" class="w-[18px] h-[18px]"></i>
+                </button>
+                <div class="pt-1">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" 
+                         onerror="this.src='https://placehold.co/40x40/8b5cf6/ffffff?text=TP'"
+                         alt="User" class="w-8 h-8 rounded-full object-cover ring-2 ring-purple-100">
+                </div>
+            </div>
+        </aside>
+
+        <!-- ================= SECONDARY MENU SIDEBAR ================= -->
+        <aside id="secondarySidebar" class="w-56 bg-white border-r border-slate-100 flex flex-col justify-between py-4 px-3 shrink-0 overflow-y-auto hidden lg:flex select-none">
+            <div>
+                <!-- Header -->
+                <div class="px-3 mb-4 pt-0.5">
+                    <h2 class="text-[15px] font-bold text-slate-800 tracking-tight">Dashboards</h2>
+                </div>
+
+                <!-- Navigation List -->
+                <ul class="space-y-1 text-[13px] font-medium text-slate-600">
+                    <!-- Active Item: Sales -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-lg bg-[#8b5cf6] text-white font-semibold shadow-sm shadow-purple-200">
+                            <i data-lucide="badge-percent" class="w-4 h-4 stroke-[2.2]"></i>
+                            <span>Sales</span>
+                        </a>
+                    </li>
+                    <!-- Analytics -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-slate-400"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                    <!-- Ecommerce -->
+                    <li>
+                        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <div class="flex items-center space-x-2.5">
+                                <i data-lucide="shopping-bag" class="w-4 h-4 text-slate-400"></i>
+                                <span>Ecommerce</span>
+                                <span class="px-1.5 py-0.2 bg-purple-50 text-purple-600 text-[10px] font-bold rounded">8</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </a>
+                    </li>
+                    <!-- Crypto -->
+                    <li>
+                        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <div class="flex items-center space-x-2.5">
+                                <i data-lucide="hexagon" class="w-4 h-4 text-slate-400"></i>
+                                <span>Crypto</span>
+                                <span class="px-1.5 py-0.2 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded">8</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </a>
+                    </li>
+                    <!-- CRM -->
+                    <li>
+                        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <div class="flex items-center space-x-2.5">
+                                <i data-lucide="user-check" class="w-4 h-4 text-slate-400"></i>
+                                <span>CRM</span>
+                                <span class="px-1.5 py-0.2 bg-amber-50 text-amber-500 text-[10px] font-bold rounded">5</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </a>
+                    </li>
+                    <!-- Projects -->
+                    <li>
+                        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <div class="flex items-center space-x-2.5">
+                                <i data-lucide="folder" class="w-4 h-4 text-slate-400"></i>
+                                <span>Projects</span>
+                                <span class="px-1.5 py-0.2 bg-teal-50 text-teal-500 text-[10px] font-bold rounded">4</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </a>
+                    </li>
+                    <!-- HRM -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="contact-2" class="w-4 h-4 text-slate-400"></i>
+                            <span>HRM</span>
+                        </a>
+                    </li>
+                    <!-- Courses -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="book-open" class="w-4 h-4 text-slate-400"></i>
+                            <span>Courses</span>
+                        </a>
+                    </li>
+                    <!-- Stocks -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="line-chart" class="w-4 h-4 text-slate-400"></i>
+                            <span>Stocks</span>
+                        </a>
+                    </li>
+                    <!-- NFT -->
+                    <li>
+                        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <div class="flex items-center space-x-2.5">
+                                <i data-lucide="image" class="w-4 h-4 text-slate-400"></i>
+                                <span>NFT</span>
+                                <span class="px-1.5 py-0.2 bg-rose-50 text-rose-500 text-[10px] font-bold rounded">6</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </a>
+                    </li>
+                    <!-- Jobs -->
+                    <li>
+                        <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <div class="flex items-center space-x-2.5">
+                                <i data-lucide="briefcase" class="w-4 h-4 text-slate-400"></i>
+                                <span>Jobs</span>
+                                <span class="px-1.5 py-0.2 bg-emerald-50 text-emerald-500 text-[10px] font-bold rounded">3</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </a>
+                    </li>
+                    <!-- Podcast -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="mic" class="w-4 h-4 text-slate-400"></i>
+                            <span>Podcast</span>
+                        </a>
+                    </li>
+                    <!-- Social Media -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="message-circle" class="w-4 h-4 text-slate-400"></i>
+                            <span>Social Media</span>
+                        </a>
+                    </li>
+                    <!-- School -->
+                    <li>
+                        <a href="#" class="flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="graduation-cap" class="w-4 h-4 text-slate-400"></i>
+                            <span>School</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Bottom AI Helper Card -->
+            <div class="mt-4 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#7c3aed] via-[#8b5cf6] to-[#6366f1] p-4 text-center text-white shadow-md">
+                <!-- Decorative soft circles -->
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-white/10 blur-md pointer-events-none"></div>
+                <div class="absolute -left-6 top-6 w-20 h-20 rounded-full bg-purple-400/20 blur-md pointer-events-none"></div>
+                
+                <h4 class="text-xs font-bold tracking-wide relative z-10 mb-3">Dashboard AI Helper</h4>
+                
+                <div class="w-12 h-12 mx-auto my-3 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-inner relative z-10">
+                    <i data-lucide="bot" class="w-6 h-6 text-white"></i>
+                </div>
+
+                <button class="mt-3 w-full py-2 bg-white text-slate-800 hover:bg-slate-50 font-semibold text-xs rounded-xl shadow-sm transition relative z-10">
+                    Try Now
+                </button>
+            </div>
+        </aside>
+
+        <!-- ================= MAIN CONTENT AREA ================= -->
+        <div class="flex-1 flex flex-col h-screen overflow-hidden">
+            
+            <!-- TOP NAVBAR -->
+            <header class="h-14 bg-white border-b border-slate-100 px-6 flex items-center justify-between shrink-0 z-10">
+                <!-- Left: Menu toggle & Search -->
+                <div class="flex items-center space-x-4">
+                    <button id="toggleSidebarBtn" class="text-slate-500 hover:text-slate-800 p-1 rounded-lg">
+                        <i data-lucide="align-left" class="w-5 h-5"></i>
+                    </button>
+                    <div class="relative w-64 sm:w-80">
+                        <input type="text" placeholder="Search" 
+                               class="w-full pl-3.5 pr-9 py-1.5 bg-slate-50/70 border border-slate-200/80 rounded-lg text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:bg-white transition">
+                        <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2"></i>
+                    </div>
+                </div>
+
+                <!-- Right: Utility Icons -->
+                <div class="flex items-center space-x-2.5">
+                    <!-- Language Globe -->
+                    <button class="w-8 h-8 rounded-full border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-600 transition">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                    </button>
+                    <!-- Cart with Badge -->
+                    <button class="w-8 h-8 rounded-full border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-600 relative transition">
+                        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                        <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#8b5cf6] text-white text-[9px] font-bold flex items-center justify-center">5</span>
+                    </button>
+                    <!-- Notification Bell -->
+                    <button class="w-8 h-8 rounded-full border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-600 relative transition">
+                        <i data-lucide="bell" class="w-4 h-4"></i>
+                        <span class="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-pink-500 ring-2 ring-white"></span>
+                    </button>
+                    <!-- Fullscreen -->
+                    <button id="fullscreenBtn" class="w-8 h-8 rounded-full border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-600 transition">
+                        <i data-lucide="maximize" class="w-4 h-4"></i>
+                    </button>
+                    <!-- User Profile Avatar -->
+                    <div class="pl-1">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" 
+                             onerror="this.src='https://placehold.co/32x32/8b5cf6/ffffff?text=U'"
+                             alt="Avatar" class="w-7 h-7 rounded-full object-cover border border-slate-200">
+                    </div>
+                    <!-- Settings Gear -->
+                    <button class="w-8 h-8 rounded-full border border-slate-100 hover:bg-slate-50 flex items-center justify-center text-slate-600 transition">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE DASHBOARD BODY -->
+            <main class="flex-1 overflow-y-auto px-6 py-5">
+                
+                <!-- Dashboard Title & Date Filter Row -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                    <h1 class="text-base font-bold text-slate-800">Dashboard</h1>
+                    
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-white border border-slate-200/80 rounded-lg px-3 py-1.5 text-[11px] font-medium text-slate-600 shadow-2xs">
+                            23, Okt 2026 to 22, Nov 2026
+                        </div>
+                        <button class="w-8 h-8 rounded-lg bg-[#8b5cf6] hover:bg-purple-600 text-white flex items-center justify-center shadow-xs transition">
+                            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-lg bg-[#8b5cf6] hover:bg-purple-600 text-white flex items-center justify-center shadow-xs transition">
+                            <i data-lucide="SlidersHorizontal" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MAIN 12-COLUMN GRID -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                    
+                    <!-- LEFT COLUMN: 4 METRIC CARDS (Span 3) -->
+                    <div class="lg:col-span-3 flex flex-col justify-between space-y-4">
+                        
+                        <!-- Card 1: Total Revenue -->
+                        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
+                            <div class="absolute left-0 top-3 bottom-3 w-1 bg-[#8b5cf6] rounded-r-full"></div>
+                            <div class="pl-2">
+                                <p class="text-xs font-semibold text-slate-600 mb-1">Total Revenue</p>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-1.5">$46,658</h3>
+                                <div class="flex items-center text-[11px] font-medium">
+                                    <span class="text-emerald-500 flex items-center font-semibold mr-1">
+                                        <i data-lucide="trending-up" class="w-3 h-3 mr-0.5"></i> 0.45%
+                                    </span>
+                                    <span class="text-slate-400">this month</span>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 text-[#8b5cf6] flex items-center justify-center shrink-0">
+                                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Refund Requests -->
+                        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
+                            <div class="absolute left-0 top-3 bottom-3 w-1 bg-pink-500 rounded-r-full"></div>
+                            <div class="pl-2">
+                                <p class="text-xs font-semibold text-slate-600 leading-snug mb-1">Refund<br>Requests</p>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-1.5">4,654</h3>
+                                <div class="flex items-center text-[11px] font-medium">
+                                    <span class="text-emerald-500 flex items-center font-semibold mr-1">
+                                        <i data-lucide="trending-up" class="w-3 h-3 mr-0.5"></i> 4.43%
+                                    </span>
+                                    <span class="text-slate-400">this<br>month</span>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 self-start mt-2">
+                                <i data-lucide="clipboard-List" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Total Orders -->
+                        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
+                            <div class="absolute left-0 top-3 bottom-3 w-1 bg-amber-400 rounded-r-full"></div>
+                            <div class="pl-2">
+                                <p class="text-xs font-semibold text-slate-600 mb-1">Total Orders</p>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-1.5">25,853</h3>
+                                <div class="flex items-center text-[11px] font-medium">
+                                    <span class="text-emerald-500 flex items-center font-semibold mr-1">
+                                        <i data-lucide="trending-up" class="w-3 h-3 mr-0.5"></i> 1.25%
+                                    </span>
+                                    <span class="text-slate-400">this<br>month</span>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Total Visitors -->
+                        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
+                            <div class="absolute left-0 top-3 bottom-3 w-1 bg-emerald-500 rounded-r-full"></div>
+                            <div class="pl-2">
+                                <p class="text-xs font-semibold text-slate-600 mb-1">Total Visitors</p>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-1.5">63,744</h3>
+                                <div class="flex items-center text-[11px] font-medium">
+                                    <span class="text-rose-500 flex items-center font-semibold mr-1">
+                                        <i data-lucide="trending-down" class="w-3 h-3 mr-0.5"></i> 2.97%
+                                    </span>
+                                    <span class="text-slate-400">this<br>month</span>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
+                                <i data-lucide="users" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- CENTER COLUMN: SALES OVERVIEW CHART (Span 6) -->
+                    <div class="lg:col-span-6 bg-white rounded-xl border border-slate-100 shadow-2xs flex flex-col justify-between">
+                        
+                        <!-- Top Card Header -->
+                        <div class="p-5 pb-0">
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                                <h2 class="text-sm font-bold text-slate-800">Sales Overview</h2>
+                                <!-- Period Buttons -->
+                                <div class="inline-flex bg-purple-50/70 p-0.5 rounded-lg text-[11px] font-semibold">
+                                    <button class="px-2.5 py-1 rounded-md bg-[#8b5cf6] text-white shadow-2xs">Day</button>
+                                    <button class="px-2.5 py-1 rounded-md text-[#8b5cf6] hover:bg-purple-100/50 transition">Week</button>
+                                    <button class="px-2.5 py-1 rounded-md text-[#8b5cf6] hover:bg-purple-100/50 transition">Month</button>
+                                    <button class="px-2.5 py-1 rounded-md text-[#8b5cf6] hover:bg-purple-100/50 transition">Year</button>
+                                </div>
+                            </div>
+
+                            <!-- Custom Legend -->
+                            <div class="flex items-center space-x-4 text-[11px] font-semibold text-slate-600 mb-4 pl-2">
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-[#8b5cf6] mr-1.5"></span>
+                                    <span>Total Orders</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-[#ec4899] mr-1.5"></span>
+                                    <span>Total Sales</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-[#10b981] mr-1.5"></span>
+                                    <span>Revenue</span>
+                                </div>
+                            </div>
+
+                            <!-- Chart Canvas Container -->
+                            <div class="relative h-[300px] w-full pt-2">
+                                <canvas id="salesOverviewChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Summary Stats Row -->
+                        <div class="grid grid-cols-3 border-t border-slate-100 divide-x divide-slate-100 text-center py-4 mt-2">
+                            <div>
+                                <p class="text-[11px] text-slate-400 font-medium mb-1">Total Orders</p>
+                                <h4 class="text-sm font-bold text-slate-800">15,535</h4>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-400 font-medium mb-1">Total Sales</p>
+                                <h4 class="text-sm font-bold text-slate-800">21,754</h4>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-400 font-medium mb-1">Revenue Earned</p>
+                                <h4 class="text-sm font-bold text-slate-800">$1.8M</h4>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: PROMO BANNER & RADAR CHART (Span 3) -->
+                    <div class="lg:col-span-3 flex flex-col justify-between space-y-5">
+                        
+                        <!-- Top Greeting Banner -->
+                        <div class="rounded-xl bg-gradient-to-br from-[#7c3aed] via-[#8b5cf6] to-[#9333ea] p-5 text-white relative overflow-hidden shadow-sm">
+                            <!-- Background Decorative Waves SVG -->
+                            <svg class="absolute right-0 top-0 h-full w-full opacity-20 pointer-events-none" viewBox="0 0 200 150" fill="none">
+                                <path d="M120 -20 C150 40, 80 80, 140 160 L220 160 L220 -20 Z" fill="white"/>
+                                <circle cx="170" cy="30" r="40" stroke="white" stroke-width="1.5" stroke-dasharray="4 4"/>
+                            </svg>
+
+                            <div class="relative z-10 max-w-[70%]">
+                                <h3 class="text-sm font-bold flex items-center gap-1.5 mb-1.5">
+                                    <span>Hi, Tom Phillip</span>
+                                    <span class="text-base">👋</span>
+                                </h3>
+                                <p class="text-[11px] text-purple-100 leading-relaxed mb-4">
+                                    Check out the latest sales updates.
+                                </p>
+                                <button class="inline-flex items-center space-x-1.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white text-[11px] font-semibold px-3.5 py-2 rounded-lg shadow-sm transition">
+                                    <span>Upgrade To Pro</span>
+                                    <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                                </button>
+                            </div>
+
+                            <!-- Vector Illustration of Person with Laptop on Bottom Right -->
+                            <div class="absolute right-2 bottom-0 w-24 h-24 pointer-events-none flex items-end justify-end">
+                                <svg viewBox="0 0 120 120" class="w-full h-full">
+                                    <!-- Bench/Desk Line -->
+                                    <rect x="20" y="96" width="90" height="3" rx="1.5" fill="#c4b5fd" opacity="0.5"/>
+                                    <rect x="35" y="99" width="3" height="15" fill="#c4b5fd" opacity="0.5"/>
+                                    <rect x="95" y="99" width="3" height="15" fill="#c4b5fd" opacity="0.5"/>
+                                    <!-- Person Legs -->
+                                    <path d="M62 88 L55 112 M72 88 L78 112" stroke="#1e1b4b" stroke-width="5" stroke-linecap="round"/>
+                                    <!-- Person Torso (White Shirt) -->
+                                    <path d="M54 58 C54 53, 78 53, 78 58 L82 88 L50 88 Z" fill="#ffffff"/>
+                                    <!-- Raised Hand Holding Phone -->
+                                    <path d="M76 62 L92 48 L95 36" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                    <rect x="92" y="28" width="6" height="10" rx="1" fill="#1e1b4b"/>
+                                    <!-- Head -->
+                                    <circle cx="66" cy="44" r="7" fill="#fcd34d"/>
+                                    <!-- Hair -->
+                                    <path d="M59 42 C59 36, 73 36, 73 42 Z" fill="#1e1b4b"/>
+                                    <!-- Laptop on lap -->
+                                    <rect x="48" y="74" width="24" height="14" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1"/>
+                                    <circle cx="60" cy="81" r="2" fill="#94a3b8"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Card: Visitors By Device -->
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-2xs flex-1 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-bold text-slate-800">Visitors By Device</h3>
+                                <a href="#" class="text-[11px] font-medium text-slate-500 hover:text-[#8b5cf6] underline flex items-center">
+                                    View Report <i data-lucide="arrow-right" class="w-3 h-3 ml-0.5"></i>
+                                </a>
+                            </div>
+
+                            <!-- Radar Chart Container -->
+                            <div class="relative my-auto flex items-center justify-center h-[215px]">
+                                <canvas id="visitorsRadarChart"></canvas>
+                            </div>
+
+                            <!-- Radar Legend -->
+                            <div class="flex items-center justify-center space-x-4 text-[11px] font-semibold text-slate-600 pt-2">
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-[#8b5cf6] mr-1.5"></span>
+                                    <span>Desktop</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-[#10b981] mr-1.5"></span>
+                                    <span>Mobile</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-[#f59e0b] mr-1.5"></span>
+                                    <span>Others</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Subtle Bottom Placeholder Row (as seen peeking at bottom of screenshot) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
+                    <div class="lg:col-span-3 bg-white rounded-t-xl h-8 border border-b-0 border-slate-100"></div>
+                    <div class="lg:col-span-5 bg-white rounded-t-xl h-8 border border-b-0 border-slate-100"></div>
+                    <div class="lg:col-span-4 bg-white rounded-t-xl h-8 border border-b-0 border-slate-100"></div>
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Sidebar Toggle Interaction
+        const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+        const secondarySidebar = document.getElementById('secondarySidebar');
+        toggleSidebarBtn.addEventListener('click', () => {
+            secondarySidebar.classList.toggle('hidden');
+            secondarySidebar.classList.toggle('lg:flex');
+        });
+
+        // Fullscreen Button Interaction
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        });
+
+        // Initialize Charts on Window Load
+        window.onload = function () {
+            
+            // 1. SALES OVERVIEW COMBO CHART
+            const salesCtx = document.getElementById('salesOverviewChart').getContext('2d');
+            
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [
+                        // Smooth Green Revenue Line (Rendered on top)
+                        {
+                            type: 'line',
+                            label: 'Revenue',
+                            data: [22, 38, 35, 66, 30, 56, 24, 39, 32, 56, 42, 20],
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            borderWidth: 1.8,
+                            tension: 0.42,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            order: 1
+                        },
+                        // Purple Bars: Total Orders
+                        {
+                            type: 'bar',
+                            label: 'Total Orders',
+                            data: [62, 70, 48, 47, 64, 30, 51, 78, 30, 42, 40, 24],
+                            backgroundColor: '#a855f7',
+                            borderRadius: 4,
+                            barPercentage: 0.55,
+                            categoryPercentage: 0.65,
+                            order: 2
+                        },
+                        // Pink Bars: Total Sales
+                        {
+                            type: 'bar',
+                            label: 'Total Sales',
+                            data: [39, 30, 82, 78, 38, 46, 48, 46, 46, 29, 66, 38],
+                            backgroundColor: '#ec4899',
+                            borderRadius: 4,
+                            barPercentage: 0.55,
+                            categoryPercentage: 0.65,
+                            order: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Using custom HTML legend above
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            padding: 10,
+                            cornerRadius: 8,
+                            titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
+                            bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 11 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: true,
+                                color: '#f8fafc',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                font: {
+                                    family: "'Plus Jakarta Sans', sans-serif",
+                                    size: 10
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            grid: {
+                                color: '#f1f5f9',
+                                borderDash: [3, 3],
+                                drawBorder: false
+                            },
+                            ticks: {
+                                display: false,
+                                stepSize: 20
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. VISITORS BY DEVICE RADAR CHART
+            const radarCtx = document.getElementById('visitorsRadarChart').getContext('2d');
+
+            new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Sun', 'Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    datasets: [
+                        {
+                            label: 'Desktop',
+                            data: [82, 42, 92, 22, 32, 26, 38],
+                            backgroundColor: 'rgba(139, 92, 246, 0.85)',
+                            borderColor: '#8b5cf6',
+                            borderWidth: 1.5,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Mobile',
+                            data: [20, 35, 30, 72, 35, 82, 25],
+                            backgroundColor: 'rgba(16, 185, 129, 0.25)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Others',
+                            data: [35, 58, 22, 18, 15, 22, 65],
+                            backgroundColor: 'rgba(245, 158, 11, 0.25)',
+                            borderColor: '#f59e0b',
+                            borderWidth: 1,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            beginAtZero: true,
+                            angleLines: {
+                                color: '#e2e8f0'
+                            },
+                            grid: {
+                                color: '#f1f5f9'
+                            },
+                            pointLabels: {
+                                color: '#94a3b8',
+                                font: {
+                                    family: "'Plus Jakarta Sans', sans-serif",
+                                    size: 9,
+                                    weight: '500'
+                                }
+                            },
+                            ticks: {
+                                stepSize: 20,
+                                color: '#64748b',
+                                backdropColor: 'transparent',
+                                font: {
+                                    size: 8,
+                                    weight: '600'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
