@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --color-brand-purple: #8b5cf6;
+  --color-brand-light-purple: #f3e8ff;
+  --color-brand-pink: #ec4899;
+  --color-brand-teal: #10b981;
+  --color-brand-orange: #f59e0b;
+  --color-brand-bg: #f8f9fb;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
