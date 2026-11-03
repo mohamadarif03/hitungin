@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+	--font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+	--color-ungu: #8b5cf6;
+	--color-pink: #ec4899;
+	--color-teal: #10b981;
+	--color-jingga: #f59e0b;
+	--color-latar: #f8f9fb;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-sans);
+	-webkit-text-size-adjust: 100%;
+}
+
+/* Scrollbar tipis seperti pada rancangan dashboard. */
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
+}
+
+/* Rumus MathML (S-12) harus terbaca dan berskala besar. */
+.rumus math {
+	font-size: 1.75rem;
+	line-height: 1.5;
+}
+
+.rumus-kecil math {
+	font-size: 1.125rem;
+}
+
+
+/* N-09: hormati pengaturan kurangi gerak. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
