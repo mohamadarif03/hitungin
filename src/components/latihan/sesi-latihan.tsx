@@ -9,7 +9,7 @@ import {
 	PenTool,
 	Target,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { JalurIsyarat } from "@/components/latihan/jalur-isyarat";
 import { JalurKeyboard } from "@/components/latihan/jalur-keyboard";
 import { JalurSuara } from "@/components/latihan/jalur-suara";
@@ -20,8 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { VisualSoal } from "@/components/visual-bilangan";
+import { useAksesibilitasStore } from "@/datas/stores/aksesibilitas-store";
 import { useLatihanStore } from "@/datas/stores/latihan-store";
 import { nilaiJawaban, petunjuk, type Soal } from "@/lib/soal";
+import { ucapkan } from "@/lib/ucapkan";
 import { cn } from "@/lib/utils";
 
 export type CaraMenjawab = "keyboard" | "suara" | "isyarat" | "tulisan";
@@ -80,12 +82,20 @@ export function SesiLatihan({
 	const perbaruiIndeks = useLatihanStore((state) => state.perbaruiIndeks);
 	const akhiriSesi = useLatihanStore((state) => state.akhiriSesi);
 	const catatPenandaan = useLatihanStore((state) => state.catatPenandaan);
+	const suaraOtomatis = useAksesibilitasStore((state) => state.suaraOtomatis);
 	const navigate = useNavigate();
 
 	const maksPetunjuk = batasPetunjuk ?? 3;
 	const aktif = daftar[indeks];
 	const benarSaatIni = jawaban[aktif.id]?.benar === true;
 	const salahSaatIni = !benarSaatIni && (percobaan[aktif.id] ?? 0) > 0;
+
+	// Fitur Disabilitas: Otomatis bacakan soal baru jika opsi Suara Pembaca Layar aktif
+	useEffect(() => {
+		if (suaraOtomatis && aktif && !hasilAkhir) {
+			ucapkan(`Soal nomor ${indeks + 1}. ${aktif.teks}`);
+		}
+	}, [indeks, suaraOtomatis, aktif, hasilAkhir]);
 
 	function kirim(nilai: number) {
 		const tepat = nilaiJawaban(aktif, nilai);
@@ -95,7 +105,9 @@ export function SesiLatihan({
 			[aktif.id]: { benar: tepat, nilai },
 		}));
 
-		if (!tepat) {
+		if (tepat) {
+			ucapkan(`Benar! Jawaban ${nilai} tepat.`);
+		} else {
 			setPercobaan((sebelumnya) => ({
 				...sebelumnya,
 				[aktif.id]: (sebelumnya[aktif.id] ?? 0) + 1,
@@ -104,7 +116,13 @@ export function SesiLatihan({
 			setPesan(
 				`Jawaban ${nilai} belum tepat. Tidak ada jawaban yang dihitung salah secara permanen.`,
 			);
+			ucapkan(`Jawaban ${nilai} belum tepat. Coba lagi atau minta petunjuk.`);
 		}
+	}
+
+	function tanganiHasilTerbaca(angka: number) {
+		setKonfirmasi(angka);
+		ucapkan(`Terbaca ${angka}. Konfirmasi apakah hasil ini benar.`);
 	}
 
 	function mintaPetunjuk() {
@@ -366,19 +384,21 @@ export function SesiLatihan({
 						{cara === "suara" && (
 							<JalurSuara
 								key={aktif.id}
-								onTerbaca={setKonfirmasi}
+								onTerbaca={tanganiHasilTerbaca}
 								onGantiJalur={() => setCara("keyboard")}
 							/>
 						)}
 						{cara === "isyarat" && (
 							<JalurIsyarat
 								key={aktif.id}
+								onTerbaca={tanganiHasilTerbaca}
 								onGantiJalur={() => setCara("keyboard")}
 							/>
 						)}
 						{cara === "tulisan" && (
 							<JalurTulisan
 								key={aktif.id}
+								onTerbaca={tanganiHasilTerbaca}
 								onGantiJalur={() => setCara("keyboard")}
 							/>
 						)}
