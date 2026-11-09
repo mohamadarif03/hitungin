@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Lock } from "lucide-react";
 import { useState } from "react";
 import { MathRumus } from "@/components/math-rumus";
+import { IsyaratAngkaMateri } from "@/components/isyarat-angka-materi";
 import { TombolDengar } from "@/components/tombol-dengar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -156,6 +157,8 @@ function HalamanPelajaran() {
 					<ContohTerpandu langkah={level.langkah} />
 				</div>
 			</Card>
+
+			<IsyaratAngkaMateri />
 
 			<div className="flex flex-wrap gap-2 pb-2">
 				<Link
