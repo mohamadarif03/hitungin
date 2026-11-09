@@ -65,6 +65,7 @@ function HalamanMasuk() {
 	const [mode, setMode] = useState<Mode>("masuk");
 	const [nama, setNama] = useState("");
 	const [kelas, setKelas] = useState("");
+	const [kodeKelas, setKodeKelas] = useState("");
 	const [pin, setPin] = useState("");
 	const [kode, setKode] = useState("");
 	const [galat, setGalat] = useState<Record<string, string>>({});
@@ -105,13 +106,18 @@ function HalamanMasuk() {
 		if (Object.keys(kesalahan).length > 0) return;
 
 		if (mode === "masuk") {
-			const hasil = masuk(nama.trim(), pin);
+			const hasil = masuk(nama.trim(), pin, kodeKelas.trim());
 			if (!hasil.ok)
 				setGalat({ umum: hasil.pesan ?? "Belum bisa masuk. Coba lagi." });
 			return;
 		}
 		if (mode === "daftar") {
-			const hasil = daftarAkun({ nama: nama.trim(), kelas: kelas.trim(), pin });
+			const hasil = daftarAkun({
+				nama: nama.trim(),
+				kelas: kelas.trim(),
+				pin,
+				kodeKelas: kodeKelas.trim(),
+			});
 			if (!hasil.ok) {
 				setGalat({ umum: hasil.pesan ?? "Belum bisa membuat akun." });
 				return;
@@ -244,6 +250,19 @@ function HalamanMasuk() {
 									onChange={(peristiwa) => setNama(peristiwa.target.value)}
 									galat={galat.nama}
 								/>
+								{mode !== "pulihkan" && (
+									<Field
+										id="kodeKelas"
+										label="Kode kelas (opsional)"
+										placeholder="Contoh: KLS-4A"
+										value={kodeKelas}
+										onChange={(peristiwa) =>
+											setKodeKelas(peristiwa.target.value.toUpperCase())
+										}
+										petunjuk="Diberikan oleh guru kelas; kosongkan jika berlatih mandiri."
+										galat={galat.kodeKelas}
+									/>
+								)}
 								{mode === "daftar" && (
 									<Field
 										id="kelas"

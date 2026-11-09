@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 export type Siswa = {
 	nama: string;
 	kelas: string;
+	kodeKelas?: string;
 };
 
 export type Akun = Siswa & {
@@ -17,8 +18,13 @@ type AuthState = {
 	siswa: Siswa | null;
 	akun: Record<string, Akun>;
 	gagal: Record<string, number>;
-	masuk: (nama: string, pin: string) => Hasil;
-	daftar: (data: { nama: string; kelas: string; pin: string }) => Hasil & {
+	masuk: (nama: string, pin: string, kodeKelas?: string) => Hasil;
+	daftar: (data: {
+		nama: string;
+		kelas: string;
+		pin: string;
+		kodeKelas?: string;
+	}) => Hasil & {
 		kode?: string;
 	};
 	pulihkan: (data: { nama: string; kode: string; pin: string }) => Hasil;
@@ -51,7 +57,7 @@ export const useAuthStore = create<AuthState>()(
 			siswa: null,
 			akun: {},
 			gagal: {},
-			masuk: (nama, pin) => {
+			masuk: (nama, pin, kodeKelas) => {
 				const id = kunci(nama);
 				const akun = get().akun[id];
 				if (!akun) {
@@ -82,12 +88,16 @@ export const useAuthStore = create<AuthState>()(
 					};
 				}
 				set((state) => ({
-					siswa: { nama: akun.nama, kelas: akun.kelas },
+					siswa: {
+						nama: akun.nama,
+						kelas: akun.kelas,
+						kodeKelas: kodeKelas ? kodeKelas.trim() : akun.kodeKelas,
+					},
 					gagal: { ...state.gagal, [id]: 0 },
 				}));
 				return { ok: true };
 			},
-			daftar: ({ nama, kelas, pin }) => {
+			daftar: ({ nama, kelas, pin, kodeKelas }) => {
 				const id = kunci(nama);
 				if (get().akun[id]) {
 					return {
@@ -97,7 +107,11 @@ export const useAuthStore = create<AuthState>()(
 					};
 				}
 				const kode = buatKodePemulihan();
-				const siswa = { nama: nama.trim(), kelas: kelas.trim() };
+				const siswa = {
+					nama: nama.trim(),
+					kelas: kelas.trim(),
+					kodeKelas: kodeKelas?.trim(),
+				};
 				set((state) => ({
 					akun: {
 						...state.akun,
