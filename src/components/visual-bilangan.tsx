@@ -123,33 +123,39 @@ export function VisualMateri({
 	);
 }
 
-/** Angka sebagai puluhan (batang) dan satuan (titik). */
+/** Angka sebagai puluhan (batang) dan satuan (titik) dengan penjajaran vertikal presisi. */
 function NilaiBlok({ nilai }: { nilai: number }) {
 	const puluhan = Math.floor(nilai / 10);
 	const satuan = nilai % 10;
 	return (
-		<span className="flex items-end gap-2.5">
+		<span className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-200/90 bg-white px-3 py-2 shadow-2xs">
 			{puluhan > 0 && (
-				<span className="flex gap-1">
+				<span className="flex items-center gap-1" title={`${puluhan} puluhan`}>
 					{Array.from({ length: puluhan }, (_, urutan) => (
 						<span
 							// biome-ignore lint/suspicious/noArrayIndexKey: batang puluhan identik tanpa id.
 							key={urutan}
-							className="h-12 w-3 rounded-sm bg-[#8b5cf6]"
+							className="h-10 w-3.5 rounded-sm bg-[#8b5cf6]"
 						/>
 					))}
 				</span>
 			)}
 			{satuan > 0 && (
-				<span className="flex max-w-16 flex-wrap gap-1">
+				<span
+					className="flex max-w-24 flex-wrap items-center gap-1.5"
+					title={`${satuan} satuan`}
+				>
 					{Array.from({ length: satuan }, (_, urutan) => (
 						<span
 							// biome-ignore lint/suspicious/noArrayIndexKey: titik satuan identik tanpa id.
 							key={urutan}
-							className="h-3 w-3 rounded-full bg-[#ec4899]"
+							className="h-3.5 w-3.5 rounded-full bg-[#ec4899] shadow-2xs"
 						/>
 					))}
 				</span>
+			)}
+			{nilai === 0 && (
+				<span className="text-xs font-semibold text-slate-400">0</span>
 			)}
 		</span>
 	);
@@ -203,7 +209,7 @@ function StripUrutan({
 	);
 }
 
-/** Dua bilangan sebagai blok nilai tempat, tanpa memperlihatkan hasilnya. */
+/** Dua bilangan sebagai blok nilai tempat, dengan titik dan simbol sejajar presisi. */
 function BlokOperasi({
 	a,
 	b,
@@ -215,14 +221,21 @@ function BlokOperasi({
 }) {
 	return (
 		<figure>
-			<div aria-hidden="true" className="flex flex-wrap items-end gap-2">
+			<div
+				aria-hidden="true"
+				className="flex flex-wrap items-center gap-2.5 py-1"
+			>
 				<NilaiBlok nilai={a} />
-				<span className="pb-1 text-base font-bold text-slate-500">
+				<span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-2xl font-bold text-slate-700 shadow-2xs">
 					{operator}
 				</span>
 				<NilaiBlok nilai={b} />
-				<span className="pb-1 text-base font-bold text-slate-500">=</span>
-				<span className="pb-1 text-base font-bold text-[#8b5cf6]">?</span>
+				<span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-2xl font-bold text-slate-700 shadow-2xs">
+					=
+				</span>
+				<span className="flex h-12 min-w-14 items-center justify-center rounded-xl border-2 border-dashed border-[#8b5cf6] bg-purple-50 px-3 text-2xl font-bold text-[#8b5cf6]">
+					?
+				</span>
 			</div>
 			<figcaption className="mt-2 text-[11px] leading-relaxed text-slate-500">
 				Gambar: {a} adalah {Math.floor(a / 10)} batang puluhan dan {a % 10}{" "}
