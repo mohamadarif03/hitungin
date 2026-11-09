@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
+import { JalurIsyarat } from "@/components/latihan/jalur-isyarat";
 import { SesiLatihan } from "@/components/latihan/sesi-latihan";
+import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
+import { useAksesibilitasStore } from "@/datas/stores/aksesibilitas-store";
 import { buatSoal } from "@/lib/soal";
 
 export const Route = createFileRoute("/tamu")({
@@ -12,10 +15,26 @@ export const Route = createFileRoute("/tamu")({
 function HalamanTamu() {
 	const [siap, setSiap] = useState(false);
 	const [soal] = useState(() => buatSoal(3, 1));
+	const ukuranTeks = useAksesibilitasStore((state) => state.ukuranTeks);
+	const kontrasTinggi = useAksesibilitasStore((state) => state.kontrasTinggi);
 
 	useEffect(() => {
 		setSiap(true);
 	}, []);
+
+	useEffect(() => {
+		if (typeof document === "undefined") return;
+		const root = document.documentElement;
+		root.classList.remove("teks-besar", "teks-sangat-besar");
+		if (ukuranTeks === "besar") root.classList.add("teks-besar");
+		if (ukuranTeks === "sangat-besar") root.classList.add("teks-sangat-besar");
+
+		if (kontrasTinggi) {
+			root.classList.add("kontras-tinggi");
+		} else {
+			root.classList.remove("kontras-tinggi");
+		}
+	}, [ukuranTeks, kontrasTinggi]);
 
 	return (
 		<div className="min-h-dvh bg-[#f8f9fb] text-slate-700 antialiased">
@@ -55,13 +74,16 @@ function HalamanTamu() {
 							Mode tamu
 						</span>
 					</span>
-					<Link
-						to="/masuk"
-						className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 no-underline hover:text-[#8b5cf6]"
-					>
-						<ArrowLeft className="h-3 w-3" aria-hidden="true" />
-						Kembali ke masuk
-					</Link>
+					<div className="flex items-center gap-2.5">
+						<MenuAksesibilitas />
+						<Link
+							to="/masuk"
+							className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 no-underline hover:text-[#8b5cf6]"
+						>
+							<ArrowLeft className="h-3 w-3" aria-hidden="true" />
+							Kembali ke masuk
+						</Link>
+					</div>
 				</div>
 			</header>
 

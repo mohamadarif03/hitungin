@@ -51,6 +51,116 @@ body {
 	font-size: 1.125rem;
 }
 
+/* Aksesibilitas Disabilitas (WCAG 1.4.3, 1.4.4) */
+html.teks-besar {
+	font-size: 125% !important;
+}
+
+html.teks-sangat-besar {
+	font-size: 150% !important;
+}
+
+/* Memastikan teks kecil dengan ukuran pixel fixed juga ikut membesar secara proporsional */
+html.teks-besar .text-\[11px\],
+html.teks-besar .text-\[10px\],
+html.teks-besar .text-\[9px\] {
+	font-size: 14px !important;
+	line-height: 1.45 !important;
+}
+
+html.teks-sangat-besar .text-\[11px\],
+html.teks-sangat-besar .text-\[10px\],
+html.teks-sangat-besar .text-\[9px\] {
+	font-size: 16px !important;
+	line-height: 1.5 !important;
+}
+
+/* Mode Kontras Tinggi Tema Terang (WCAG 1.4.3 & 1.4.6 High Contrast Light Mode) */
+html.kontras-tinggi {
+	filter: contrast(125%);
+}
+
+html.kontras-tinggi body {
+	background-color: #ffffff !important;
+	color: #000000 !important;
+}
+
+html.kontras-tinggi .bg-white,
+html.kontras-tinggi .bg-slate-50,
+html.kontras-tinggi .bg-slate-100,
+html.kontras-tinggi .bg-purple-50,
+html.kontras-tinggi .bg-emerald-50,
+html.kontras-tinggi .bg-rose-50,
+html.kontras-tinggi aside,
+html.kontras-tinggi header,
+html.kontras-tinggi nav,
+html.kontras-tinggi dialog,
+html.kontras-tinggi [role="dialog"],
+html.kontras-tinggi .card {
+	background-color: #ffffff !important;
+	color: #000000 !important;
+	border: 2px solid #000000 !important;
+	box-shadow: none !important;
+}
+
+html.kontras-tinggi p,
+html.kontras-tinggi span,
+html.kontras-tinggi h1,
+html.kontras-tinggi h2,
+html.kontras-tinggi h3,
+html.kontras-tinggi label,
+html.kontras-tinggi dt,
+html.kontras-tinggi dd,
+html.kontras-tinggi li,
+html.kontras-tinggi output {
+	color: #000000 !important;
+	font-weight: 600 !important;
+}
+
+html.kontras-tinggi .text-slate-400,
+html.kontras-tinggi .text-slate-500,
+html.kontras-tinggi .text-slate-600,
+html.kontras-tinggi .text-slate-700,
+html.kontras-tinggi .text-slate-800 {
+	color: #000000 !important;
+	font-weight: 600 !important;
+}
+
+html.kontras-tinggi .text-purple-600,
+html.kontras-tinggi .text-purple-700,
+html.kontras-tinggi .text-\[\#8b5cf6\] {
+	color: #4c1d95 !important; /* ungu tua pekat kontras tinggi */
+	font-weight: 800 !important;
+}
+
+html.kontras-tinggi button,
+html.kontras-tinggi input,
+html.kontras-tinggi select {
+	border: 2px solid #000000 !important;
+	color: #000000 !important;
+	background-color: #ffffff !important;
+	font-weight: 700 !important;
+}
+
+html.kontras-tinggi button.bg-\[\#8b5cf6\],
+html.kontras-tinggi button.bg-purple-600,
+html.kontras-tinggi button[data-status="active"],
+html.kontras-tinggi .bg-purple-600 {
+	background-color: #fde047 !important; /* aksen kuning kontras tinggi di atas tema terang */
+	color: #000000 !important;
+	border: 2px solid #000000 !important;
+	font-weight: 900 !important;
+}
+
+html.kontras-tinggi .border-slate-100,
+html.kontras-tinggi .border-slate-200,
+html.kontras-tinggi .border-slate-300,
+html.kontras-tinggi .border-purple-100,
+html.kontras-tinggi .border-purple-200 {
+	border-color: #000000 !important;
+	border-width: 2px !important;
+}
+
 
 /* N-09: hormati pengaturan kurangi gerak. */
 @media (prefers-reduced-motion: reduce) {

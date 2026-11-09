@@ -3,13 +3,14 @@ import {
 	BookOpen,
 	Calculator,
 	ClipboardList,
-	Eye,
 	Home,
 	LogOut,
 	Maximize,
 	Minimize,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
+import { useAksesibilitasStore } from "@/datas/stores/aksesibilitas-store";
 import { useAuthStore } from "@/datas/stores/auth-store";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +45,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 	const navigate = useNavigate();
 	const jalur = useRouterState({ select: (state) => state.location.pathname });
 	const [layarPenuh, setLayarPenuh] = useState(false);
+	const ukuranTeks = useAksesibilitasStore((state) => state.ukuranTeks);
+	const kontrasTinggi = useAksesibilitasStore((state) => state.kontrasTinggi);
+
+	useEffect(() => {
+		if (typeof document === "undefined") return;
+		const root = document.documentElement;
+		root.classList.remove("teks-besar", "teks-sangat-besar");
+		if (ukuranTeks === "besar") root.classList.add("teks-besar");
+		if (ukuranTeks === "sangat-besar") root.classList.add("teks-sangat-besar");
+
+		if (kontrasTinggi) {
+			root.classList.add("kontras-tinggi");
+		} else {
+			root.classList.remove("kontras-tinggi");
+		}
+	}, [ukuranTeks, kontrasTinggi]);
 
 	const aktif = MENU.find((item) =>
 		item.tepat ? jalur === item.to : jalur.startsWith(item.to),
@@ -174,10 +191,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 						</div>
 
 						<div className="flex items-center gap-2">
-							<span className="hidden items-center gap-1 rounded-full border border-purple-100 bg-purple-50 px-2.5 py-1 text-[11px] font-semibold text-[#8b5cf6] sm:inline-flex">
-								<Eye className="h-3.5 w-3.5" aria-hidden="true" />
-								Akses inklusif
-							</span>
+							<MenuAksesibilitas />
 							<button
 								type="button"
 								onClick={ubahLayarPenuh}
