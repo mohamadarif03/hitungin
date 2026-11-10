@@ -224,7 +224,7 @@ export default function SalesDashboard() {
 									color: "#64748b",
 									font: {
 										family: "'Plus Jakarta Sans', sans-serif",
-										size: 9,
+										size: 10,
 										weight: 600,
 									},
 								},
@@ -233,7 +233,7 @@ export default function SalesDashboard() {
 									color: "#94a3b8",
 									backdropColor: "transparent",
 									font: {
-										size: 8,
+										size: 9,
 										weight: 600,
 									},
 								},
@@ -261,7 +261,7 @@ export default function SalesDashboard() {
 	return (
 		<div className="space-y-5">
 			{/* Dashboard Title & Filter Row */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 				<div>
 					<h1 className="text-base font-bold text-slate-800 flex items-center gap-2">
 						<span>Beranda Siswa</span>
@@ -298,111 +298,211 @@ export default function SalesDashboard() {
 				</div>
 			</div>
 
-			{/* MAIN 12-COLUMN GRID */}
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-				{/* LEFT COLUMN: 4 METRIC CARDS SESUAI PRD (Span 3) */}
-				<div className="lg:col-span-3 flex flex-col justify-between space-y-4">
-					{/* Card 1: Total Soal Selesai */}
-					<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
-						<div className="absolute left-0 top-3 bottom-3 w-1 bg-[#8b5cf6] rounded-r-full" />
-						<div className="pl-2">
-							<p className="text-xs font-semibold text-slate-600 mb-1">
-								Soal Selesai
-							</p>
-							<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1.5">
-								156 Soal
-							</h3>
-							<div className="flex items-center text-[11px] font-medium">
-								<span className="text-emerald-500 flex items-center font-semibold mr-1">
-									<TrendingUp className="w-3 h-3 mr-0.5" /> +18 soal
-								</span>
-								<span className="text-slate-400">minggu ini</span>
-							</div>
-						</div>
-						<div className="w-10 h-10 rounded-xl bg-purple-50 text-[#8b5cf6] flex items-center justify-center shrink-0">
-							<Calculator className="w-5 h-5" />
-						</div>
+			{/* GREETING BANNER: LANJUTKAN BELAJAR (PRD 6.1) - DITATA MEMBENTANG RAPI AGAR TIDAK SESAK & TIDAK OVERLAP */}
+			<div className="rounded-xl bg-gradient-to-br from-[#7c3aed] via-[#8b5cf6] to-[#9333ea] p-5 text-white relative overflow-hidden shadow-sm">
+				{/* Background Decorative Waves SVG */}
+				<svg
+					className="absolute right-0 top-0 h-full w-full opacity-20 pointer-events-none"
+					viewBox="0 0 200 150"
+					fill="none"
+					aria-hidden="true"
+				>
+					<path
+						d="M120 -20 C150 40, 80 80, 140 160 L220 160 L220 -20 Z"
+						fill="white"
+					/>
+					<circle
+						cx="170"
+						cy="30"
+						r="40"
+						stroke="white"
+						strokeWidth="1.5"
+						strokeDasharray="4 4"
+					/>
+				</svg>
+
+				<div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+					<div className="max-w-xl">
+						<h3 className="text-base font-bold flex items-center gap-1.5 mb-1">
+							<span>Halo, {namaSiswa}!</span>
+							<span className="text-lg">👋</span>
+						</h3>
+						<p className="text-xs text-purple-100 leading-relaxed mb-3">
+							Lanjutkan latihan <strong>Level 3: Penjumlahan sampai 20</strong>{" "}
+							(Soal 4 dari 10).
+						</p>
+						<Link
+							to="/latihan"
+							className="inline-flex items-center space-x-1.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm transition"
+						>
+							<span>Lanjutkan Belajar</span>
+							<ArrowRight className="w-3.5 h-3.5" />
+						</Link>
 					</div>
 
-					{/* Card 2: Akurasi Jawaban Berbasis Aturan (PRD S-28) */}
-					<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
-						<div className="absolute left-0 top-3 bottom-3 w-1 bg-pink-500 rounded-r-full" />
-						<div className="pl-2">
-							<p className="text-xs font-semibold text-slate-600 leading-snug mb-1">
-								Akurasi
-								<br />
-								Matematika
-							</p>
-							<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1.5">
-								88.5%
-							</h3>
-							<div className="flex items-center text-[11px] font-medium">
-								<span className="text-emerald-500 flex items-center font-semibold mr-1">
-									<TrendingUp className="w-3 h-3 mr-0.5" /> +4.2%
-								</span>
-								<span className="text-slate-400">
-									aturan
-									<br />
-									deterministik
-								</span>
-							</div>
-						</div>
-						<div className="w-10 h-10 rounded-xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 self-start mt-2">
-							<CheckCircle2 className="w-5 h-5" />
+					{/* Vector Illustration Siswa Belajar Inklusif */}
+					<div
+						className="w-24 h-24 shrink-0 pointer-events-none self-end sm:self-center"
+						aria-hidden="true"
+					>
+						<svg viewBox="0 0 120 120" className="w-full h-full">
+							<rect
+								x="20"
+								y="96"
+								width="90"
+								height="3"
+								rx="1.5"
+								fill="#c4b5fd"
+								opacity="0.5"
+							/>
+							<rect
+								x="35"
+								y="99"
+								width="3"
+								height="15"
+								fill="#c4b5fd"
+								opacity="0.5"
+							/>
+							<rect
+								x="95"
+								y="99"
+								width="3"
+								height="15"
+								fill="#c4b5fd"
+								opacity="0.5"
+							/>
+							<path
+								d="M62 88 L55 112 M72 88 L78 112"
+								stroke="#1e1b4b"
+								strokeWidth="5"
+								strokeLinecap="round"
+							/>
+							<path
+								d="M54 58 C54 53, 78 53, 78 58 L82 88 L50 88 Z"
+								fill="#ffffff"
+							/>
+							<path
+								d="M76 62 L92 48 L95 36"
+								stroke="#ffffff"
+								strokeWidth="5"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								fill="none"
+							/>
+							<rect x="92" y="28" width="6" height="10" rx="1" fill="#1e1b4b" />
+							<circle cx="66" cy="44" r="7" fill="#fcd34d" />
+							<path d="M59 42 C59 36, 73 36, 73 42 Z" fill="#1e1b4b" />
+							<rect
+								x="48"
+								y="74"
+								width="24"
+								height="14"
+								rx="2"
+								fill="#e2e8f0"
+								stroke="#64748b"
+								strokeWidth="1"
+							/>
+							<circle cx="60" cy="81" r="2" fill="#94a3b8" />
+						</svg>
+					</div>
+				</div>
+			</div>
+
+			{/* 4 METRIC CARDS SESUAI PRD: DITATA HORIZONTAL MENJADI 1 BARIS (BUKAN BERTUMPUK VERTIKAL DI KOLOM SEMPIT) */}
+			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
+				{/* Card 1: Total Soal Selesai */}
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between">
+					<div className="absolute left-0 top-3 bottom-3 w-1 bg-[#8b5cf6] rounded-r-full" />
+					<div className="pl-2 pr-1">
+						<p className="text-xs font-semibold text-slate-600 mb-1">
+							Soal Selesai
+						</p>
+						<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1">
+							156 Soal
+						</h3>
+						<div className="flex flex-wrap items-center text-[11px] font-medium gap-1">
+							<span className="text-emerald-500 flex items-center font-semibold">
+								<TrendingUp className="w-3 h-3 mr-0.5" /> +18 soal
+							</span>
+							<span className="text-slate-400">minggu ini</span>
 						</div>
 					</div>
-
-					{/* Card 3: Target Latihan Mandiri (PRD S-40) */}
-					<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
-						<div className="absolute left-0 top-3 bottom-3 w-1 bg-amber-400 rounded-r-full" />
-						<div className="pl-2">
-							<p className="text-xs font-semibold text-slate-600 mb-1">
-								Target Berjalan
-							</p>
-							<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1.5">
-								8 / 10 Soal
-							</h3>
-							<div className="flex items-center text-[11px] font-medium">
-								<span className="text-emerald-500 flex items-center font-semibold mr-1">
-									<TrendingUp className="w-3 h-3 mr-0.5" /> 80%
-								</span>
-								<span className="text-slate-400">
-									tenggat
-									<br />
-									hari ini
-								</span>
-							</div>
-						</div>
-						<div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
-							<Target className="w-5 h-5" />
-						</div>
-					</div>
-
-					{/* Card 4: Penguasaan Level Materi (PRD 4 & S-10) */}
-					<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between flex-1">
-						<div className="absolute left-0 top-3 bottom-3 w-1 bg-emerald-500 rounded-r-full" />
-						<div className="pl-2">
-							<p className="text-xs font-semibold text-slate-600 mb-1">
-								Level Materi
-							</p>
-							<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1.5">
-								Level 3
-							</h3>
-							<div className="flex items-center text-[11px] font-medium">
-								<span className="text-purple-600 flex items-center font-semibold mr-1">
-									3 dari 6
-								</span>
-								<span className="text-slate-400">level tuntas</span>
-							</div>
-						</div>
-						<div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
-							<Award className="w-5 h-5" />
-						</div>
+					<div className="w-10 h-10 rounded-xl bg-purple-50 text-[#8b5cf6] flex items-center justify-center shrink-0">
+						<Calculator className="w-5 h-5" />
 					</div>
 				</div>
 
-				{/* CENTER COLUMN: GRAFIK RINGKASAN PROGRES PER LEVEL (Span 6) */}
-				<div className="lg:col-span-6 bg-white rounded-xl border border-slate-100 shadow-2xs flex flex-col justify-between">
+				{/* Card 2: Akurasi Jawaban Berbasis Aturan (PRD S-28) */}
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between">
+					<div className="absolute left-0 top-3 bottom-3 w-1 bg-pink-500 rounded-r-full" />
+					<div className="pl-2 pr-1">
+						<p className="text-xs font-semibold text-slate-600 mb-1">
+							Akurasi Matematika
+						</p>
+						<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1">
+							88.5%
+						</h3>
+						<div className="flex flex-wrap items-center text-[11px] font-medium gap-1">
+							<span className="text-emerald-500 flex items-center font-semibold">
+								<TrendingUp className="w-3 h-3 mr-0.5" /> +4.2%
+							</span>
+							<span className="text-slate-400">aturan deterministik</span>
+						</div>
+					</div>
+					<div className="w-10 h-10 rounded-xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0">
+						<CheckCircle2 className="w-5 h-5" />
+					</div>
+				</div>
+
+				{/* Card 3: Target Latihan Mandiri (PRD S-40) */}
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between">
+					<div className="absolute left-0 top-3 bottom-3 w-1 bg-amber-400 rounded-r-full" />
+					<div className="pl-2 pr-1">
+						<p className="text-xs font-semibold text-slate-600 mb-1">
+							Target Berjalan
+						</p>
+						<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1">
+							8 / 10 Soal
+						</h3>
+						<div className="flex flex-wrap items-center text-[11px] font-medium gap-1">
+							<span className="text-emerald-500 flex items-center font-semibold">
+								<TrendingUp className="w-3 h-3 mr-0.5" /> 80%
+							</span>
+							<span className="text-slate-400">tenggat hari ini</span>
+						</div>
+					</div>
+					<div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+						<Target className="w-5 h-5" />
+					</div>
+				</div>
+
+				{/* Card 4: Penguasaan Level Materi (PRD 4 & S-10) */}
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs relative overflow-hidden flex items-center justify-between">
+					<div className="absolute left-0 top-3 bottom-3 w-1 bg-emerald-500 rounded-r-full" />
+					<div className="pl-2 pr-1">
+						<p className="text-xs font-semibold text-slate-600 mb-1">
+							Level Materi
+						</p>
+						<h3 className="text-xl font-bold text-slate-800 tracking-tight mb-1">
+							Level 3
+						</h3>
+						<div className="flex flex-wrap items-center text-[11px] font-medium gap-1">
+							<span className="text-purple-600 flex items-center font-semibold">
+								3 dari 6
+							</span>
+							<span className="text-slate-400">level tuntas</span>
+						</div>
+					</div>
+					<div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
+						<Award className="w-5 h-5" />
+					</div>
+				</div>
+			</div>
+
+			{/* AREA GRAFIK & ANALITIK: PROGRES LATIHAN (KIRI) DAN DISTRIBUSI JALUR AKSES (KANAN) */}
+			<div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+				{/* GRAFIK RINGKASAN PROGRES PER LEVEL (lg:col-span-7) */}
+				<div className="lg:col-span-7 bg-white rounded-xl border border-slate-100 shadow-2xs flex flex-col justify-between">
 					{/* Top Card Header */}
 					<div className="p-5 pb-0">
 						<div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -411,8 +511,7 @@ export default function SalesDashboard() {
 									Progres Latihan per Level Materi
 								</h2>
 								<p className="text-[11px] text-slate-400">
-									Akurasi aturan matematika & perbandingan petunjuk latihan (PRD
-									S-42)
+									Akurasi aturan matematika & perbandingan petunjuk latihan
 								</p>
 							</div>
 
@@ -461,9 +560,7 @@ export default function SalesDashboard() {
 								className="text-purple-600 hover:text-purple-800 text-[10px] font-medium flex items-center gap-1 underline"
 							>
 								<Table className="w-3 h-3" />
-								{showDataTable
-									? "Sembunyikan Tabel"
-									: "Lihat Tabel Data (Aksesibel)"}
+								{showDataTable ? "Sembunyikan Tabel" : "Lihat Tabel Data"}
 							</button>
 						</div>
 
@@ -551,7 +648,7 @@ export default function SalesDashboard() {
 						)}
 
 						{/* Chart Canvas Container */}
-						<div className="relative h-[270px] w-full pt-1">
+						<div className="relative min-h-[250px] h-[270px] w-full pt-1">
 							<canvas ref={performanceChartRef} />
 						</div>
 					</div>
@@ -581,285 +678,179 @@ export default function SalesDashboard() {
 					</div>
 				</div>
 
-				{/* RIGHT COLUMN: LANJUTKAN BELAJAR BANNER & RADAR JALUR AKSES (Span 3) */}
-				<div className="lg:col-span-3 flex flex-col justify-between space-y-5">
-					{/* Top Greeting Banner: Lanjutkan Belajar (PRD 6.1) */}
-					<div className="rounded-xl bg-gradient-to-br from-[#7c3aed] via-[#8b5cf6] to-[#9333ea] p-5 text-white relative overflow-hidden shadow-sm">
-						{/* Background Decorative Waves SVG */}
-						<svg
-							className="absolute right-0 top-0 h-full w-full opacity-20 pointer-events-none"
-							viewBox="0 0 200 150"
-							fill="none"
-						>
-							<path
-								d="M120 -20 C150 40, 80 80, 140 160 L220 160 L220 -20 Z"
-								fill="white"
-							/>
-							<circle
-								cx="170"
-								cy="30"
-								r="40"
-								stroke="white"
-								strokeWidth="1.5"
-								strokeDasharray="4 4"
-							/>
-						</svg>
-
-						<div className="relative max-w-[70%]">
-							<h3 className="text-sm font-bold flex items-center gap-1.5 mb-1">
-								<span>Halo, {namaSiswa}!</span>
-								<span className="text-base">👋</span>
+				{/* RADAR CHART: DISTRIBUSI 4 JALUR JAWABAN INKLUSIF (PRD S-22 s.d S-26) (lg:col-span-5) */}
+				<div className="lg:col-span-5 bg-white rounded-xl p-5 border border-slate-100 shadow-2xs flex flex-col justify-between">
+					<div className="flex items-center justify-between mb-1">
+						<div>
+							<h3 className="text-sm font-bold text-slate-800">
+								Distribusi Jalur Akses
 							</h3>
-							<p className="text-[11px] text-purple-100 leading-relaxed mb-3">
-								Lanjutkan latihan{" "}
-								<strong>Level 3: Penjumlahan sampai 20</strong> (Soal 4 dari
-								10).
+							<p className="text-[10px] text-slate-400">
+								Frekuensi pemakaian jalur input soal
 							</p>
-							<Link
-								to="/latihan"
-								className="inline-flex items-center space-x-1.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white text-[11px] font-semibold px-3 py-2 rounded-lg shadow-sm transition"
-							>
-								<span>Lanjutkan Belajar</span>
-								<ArrowRight className="w-3 h-3" />
-							</Link>
 						</div>
-
-						{/* Vector Illustration Siswa Belajar Inklusif */}
-						<div className="absolute right-1 bottom-0 w-24 h-24 pointer-events-none flex items-end justify-end">
-							<svg viewBox="0 0 120 120" className="w-full h-full">
-								<rect
-									x="20"
-									y="96"
-									width="90"
-									height="3"
-									rx="1.5"
-									fill="#c4b5fd"
-									opacity="0.5"
-								/>
-								<rect
-									x="35"
-									y="99"
-									width="3"
-									height="15"
-									fill="#c4b5fd"
-									opacity="0.5"
-								/>
-								<rect
-									x="95"
-									y="99"
-									width="3"
-									height="15"
-									fill="#c4b5fd"
-									opacity="0.5"
-								/>
-								<path
-									d="M62 88 L55 112 M72 88 L78 112"
-									stroke="#1e1b4b"
-									strokeWidth="5"
-									strokeLinecap="round"
-								/>
-								<path
-									d="M54 58 C54 53, 78 53, 78 58 L82 88 L50 88 Z"
-									fill="#ffffff"
-								/>
-								<path
-									d="M76 62 L92 48 L95 36"
-									stroke="#ffffff"
-									strokeWidth="5"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									fill="none"
-								/>
-								<rect
-									x="92"
-									y="28"
-									width="6"
-									height="10"
-									rx="1"
-									fill="#1e1b4b"
-								/>
-								<circle cx="66" cy="44" r="7" fill="#fcd34d" />
-								<path d="M59 42 C59 36, 73 36, 73 42 Z" fill="#1e1b4b" />
-								<rect
-									x="48"
-									y="74"
-									width="24"
-									height="14"
-									rx="2"
-									fill="#e2e8f0"
-									stroke="#64748b"
-									strokeWidth="1"
-								/>
-								<circle cx="60" cy="81" r="2" fill="#94a3b8" />
-							</svg>
-						</div>
+						<Link
+							to="/latihan"
+							className="text-[11px] font-medium text-slate-500 hover:text-[#8b5cf6] underline flex items-center"
+						>
+							Panduan Jalur <ArrowRight className="w-3 h-3 ml-0.5" />
+						</Link>
 					</div>
 
-					{/* Bottom Card: Distribusi 4 Jalur Jawaban Inklusif (PRD S-22 s.d S-26) */}
-					<div className="bg-white rounded-xl p-5 border border-slate-100 shadow-2xs flex-1 flex flex-col justify-between">
-						<div className="flex items-center justify-between mb-1">
-							<div>
-								<h3 className="text-sm font-bold text-slate-800">
-									Distribusi Jalur Akses
-								</h3>
-								<p className="text-[10px] text-slate-400">
-									Frekuensi pemakaian jalur input soal
-								</p>
-							</div>
-							<Link
-								to="/latihan"
-								className="text-[11px] font-medium text-slate-500 hover:text-[#8b5cf6] underline flex items-center"
-							>
-								Panduan Jalur <ArrowRight className="w-3 h-3 ml-0.5" />
-							</Link>
-						</div>
+					{/* Radar Chart Container */}
+					<div className="relative my-auto flex items-center justify-center min-h-[220px] h-[240px] w-full">
+						<canvas ref={radarChartRef} />
+					</div>
 
-						{/* Radar Chart Container */}
-						<div className="relative my-auto flex items-center justify-center h-[200px]">
-							<canvas ref={radarChartRef} />
+					{/* Radar Legend Jalur Jawaban */}
+					<div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-semibold text-slate-600 pt-2 border-t border-slate-50">
+						<div className="flex items-center">
+							<span className="w-2 h-2 rounded-full bg-[#8b5cf6] mr-1" />
+							<span>Suara</span>
 						</div>
-
-						{/* Radar Legend Jalur Jawaban */}
-						<div className="flex items-center justify-center space-x-3 text-[10px] font-semibold text-slate-600 pt-1">
-							<div className="flex items-center">
-								<span className="w-2 h-2 rounded-full bg-[#8b5cf6] mr-1" />
-								<span>Suara</span>
-							</div>
-							<div className="flex items-center">
-								<span className="w-2 h-2 rounded-full bg-[#10b981] mr-1" />
-								<span>Isyarat Tangan</span>
-							</div>
-							<div className="flex items-center">
-								<span className="w-2 h-2 rounded-full bg-[#f59e0b] mr-1" />
-								<span>Kanvas / Papan Ketik</span>
-							</div>
+						<div className="flex items-center">
+							<span className="w-2 h-2 rounded-full bg-[#10b981] mr-1" />
+							<span>Isyarat Tangan</span>
+						</div>
+						<div className="flex items-center">
+							<span className="w-2 h-2 rounded-full bg-[#f59e0b] mr-1" />
+							<span>Kanvas / Papan Ketik</span>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			{/* BOTTOM SECTION SESUAI PRD: TARGET TERDEKAT, POLA KESALAHAN, & STATUS JALUR AKSES */}
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 				{/* Box 1: Target Latihan Terdekat (PRD S-40) */}
-				<div className="lg:col-span-4 bg-white rounded-xl p-4 border border-slate-100 shadow-2xs">
-					<div className="flex items-center justify-between mb-3">
-						<div className="flex items-center space-x-2">
-							<div className="w-7 h-7 rounded-lg bg-purple-50 text-[#8b5cf6] flex items-center justify-center">
-								<Target className="w-4 h-4" />
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs flex flex-col justify-between">
+					<div>
+						<div className="flex items-center justify-between mb-3">
+							<div className="flex items-center space-x-2">
+								<div className="w-7 h-7 rounded-lg bg-purple-50 text-[#8b5cf6] flex items-center justify-center">
+									<Target className="w-4 h-4" />
+								</div>
+								<h3 className="text-xs font-bold text-slate-800">
+									Target Belajar Terdekat
+								</h3>
 							</div>
-							<h3 className="text-xs font-bold text-slate-800">
-								Target Belajar Terdekat
-							</h3>
-						</div>
-						<span className="text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-							Hari Ini
-						</span>
-					</div>
-					<div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-						<div className="flex justify-between items-center mb-1.5">
-							<span className="text-xs font-bold text-slate-700">
-								Latihan Penjumlahan s.d 20
-							</span>
-							<span className="text-xs font-semibold text-purple-600">
-								8 / 10 Soal
+							<span className="text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
+								Hari Ini
 							</span>
 						</div>
-						<div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
-							<div
-								className="bg-[#8b5cf6] h-full rounded-full transition-all duration-300"
-								style={{ width: "80%" }}
-							/>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+							<div className="flex justify-between items-center mb-1.5">
+								<span className="text-xs font-bold text-slate-700">
+									Latihan Penjumlahan s.d 20
+								</span>
+								<span className="text-xs font-semibold text-purple-600">
+									8 / 10 Soal
+								</span>
+							</div>
+							<div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
+								<div
+									className="bg-[#8b5cf6] h-full rounded-full transition-all duration-300"
+									style={{ width: "80%" }}
+								/>
+							</div>
+							<p className="text-[11px] text-slate-500">
+								Sisa 2 soal untuk menuntaskan target harian tanpa batas waktu.
+							</p>
 						</div>
-						<p className="text-[11px] text-slate-500">
-							Sisa 2 soal untuk menuntaskan target harian tanpa batas waktu.
-						</p>
 					</div>
 				</div>
 
 				{/* Box 2: Pola Kesalahan & Saran Latihan Ulang (PRD S-46) */}
-				<div className="lg:col-span-5 bg-white rounded-xl p-4 border border-slate-100 shadow-2xs">
-					<div className="flex items-center justify-between mb-3">
-						<div className="flex items-center space-x-2">
-							<div className="w-7 h-7 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center">
-								<AlertCircle className="w-4 h-4" />
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs flex flex-col justify-between">
+					<div>
+						<div className="flex items-center justify-between mb-3">
+							<div className="flex items-center space-x-2">
+								<div className="w-7 h-7 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center">
+									<AlertCircle className="w-4 h-4" />
+								</div>
+								<h3 className="text-xs font-bold text-slate-800">
+									Pola Kesalahan & Rekomendasi
+								</h3>
 							</div>
-							<h3 className="text-xs font-bold text-slate-800">
-								Pola Kesalahan & Rekomendasi
-							</h3>
+							<span className="text-[10px] font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">
+								Perlu Latihan
+							</span>
 						</div>
-						<span className="text-[10px] font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">
-							S-46
-						</span>
-					</div>
-					<div className="p-3 rounded-lg bg-pink-50/40 border border-pink-100 flex items-start justify-between gap-3">
-						<div>
-							<h4 className="text-xs font-bold text-slate-800 mb-0.5">
-								Menyimpan pada Penjumlahan Puluhan
-							</h4>
-							<p className="text-[11px] text-slate-600 leading-relaxed mb-2">
-								Sering keliru saat menjumlahkan angka satuan yang menghasilkan
-								puluhan (misal: 38 + 27).
-							</p>
-							<button
-								type="button"
-								className="text-[11px] font-semibold text-[#8b5cf6] hover:text-purple-700 underline flex items-center gap-1"
-							>
-								<Sparkles className="w-3 h-3" /> Latih 5 Soal Sejenis Sekarang
-							</button>
+						<div className="p-3 rounded-lg bg-pink-50/40 border border-pink-100 flex items-start justify-between gap-3">
+							<div>
+								<h4 className="text-xs font-bold text-slate-800 mb-0.5">
+									Menyimpan pada Penjumlahan Puluhan
+								</h4>
+								<p className="text-[11px] text-slate-600 leading-relaxed mb-2">
+									Sering keliru saat menjumlahkan angka satuan yang menghasilkan
+									puluhan (misal: 38 + 27).
+								</p>
+								<button
+									type="button"
+									className="text-[11px] font-semibold text-[#8b5cf6] hover:text-purple-700 underline flex items-center gap-1"
+								>
+									<Sparkles className="w-3 h-3" /> Latih 5 Soal Sejenis Sekarang
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				{/* Box 3: Status Izin & Jalur Akses Perangkat (PRD S-07, S-32) */}
-				<div className="lg:col-span-3 bg-white rounded-xl p-4 border border-slate-100 shadow-2xs">
-					<div className="flex items-center justify-between mb-3">
-						<div className="flex items-center space-x-2">
-							<div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-								<CheckCircle2 className="w-4 h-4" />
+				{/* Box 3: Status Izin & Jalur Akses Perangkat */}
+				<div className="bg-white rounded-xl p-4 border border-slate-100 shadow-2xs flex flex-col justify-between">
+					<div>
+						<div className="flex items-center justify-between mb-3">
+							<div className="flex items-center space-x-2">
+								<div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+									<CheckCircle2 className="w-4 h-4" />
+								</div>
+								<h3 className="text-xs font-bold text-slate-800">
+									Status Jalur Akses
+								</h3>
 							</div>
-							<h3 className="text-xs font-bold text-slate-800">
-								Status Jalur Akses
-							</h3>
-						</div>
-						<span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-							Privasi N-41
-						</span>
-					</div>
-					<div className="space-y-1.5 text-[11px]">
-						<div className="flex items-center justify-between text-slate-600">
-							<span className="flex items-center gap-1.5">
-								<Mic className="w-3.5 h-3.5 text-purple-500" /> Suara (Audio)
-							</span>
-							<span className="text-emerald-600 font-semibold">Aktif</span>
-						</div>
-						<div className="flex items-center justify-between text-slate-600">
-							<span className="flex items-center gap-1.5">
-								<Hand className="w-3.5 h-3.5 text-emerald-500" /> Isyarat Kamera
-							</span>
-							<span className="text-emerald-600 font-semibold">
-								Lokal (Aman)
+							<span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+								Privasi Terjamin
 							</span>
 						</div>
-						<div className="flex items-center justify-between text-slate-600">
-							<span className="flex items-center gap-1.5">
-								<Keyboard className="w-3.5 h-3.5 text-blue-500" /> Papan Ketik
-							</span>
-							<span className="text-emerald-600 font-semibold">100% WCAG</span>
+						<div className="space-y-1.5 text-[11px]">
+							<div className="flex items-center justify-between text-slate-600">
+								<span className="flex items-center gap-1.5">
+									<Mic className="w-3.5 h-3.5 text-purple-500" /> Suara (Audio)
+								</span>
+								<span className="text-emerald-600 font-semibold">Aktif</span>
+							</div>
+							<div className="flex items-center justify-between text-slate-600">
+								<span className="flex items-center gap-1.5">
+									<Hand className="w-3.5 h-3.5 text-emerald-500" /> Isyarat
+									Kamera
+								</span>
+								<span className="text-emerald-600 font-semibold">
+									Lokal (Aman)
+								</span>
+							</div>
+							<div className="flex items-center justify-between text-slate-600">
+								<span className="flex items-center gap-1.5">
+									<Keyboard className="w-3.5 h-3.5 text-blue-500" /> Papan Ketik
+								</span>
+								<span className="text-emerald-600 font-semibold">
+									Selalu Aktif
+								</span>
+							</div>
+							<p className="text-[10px] text-slate-400 pt-1 border-t border-slate-100 flex items-center gap-1">
+								<Info className="w-3 h-3 shrink-0" /> Gambar kamera diproses di
+								browser tanpa disimpan.
+							</p>
 						</div>
-						<p className="text-[10px] text-slate-400 pt-1 border-t border-slate-100 flex items-center gap-1">
-							<Info className="w-3 h-3 shrink-0" /> Gambar kamera diproses di
-							browser tanpa disimpan.
-						</p>
 					</div>
 				</div>
 			</div>
 
-			{/* Catatan Kaki Kebijakan Umpan Balik (PRD S-33) */}
+			{/* Catatan Kaki Kebijakan Umpan Balik */}
 			<div className="mt-4 text-center">
 				<p className="text-[11px] text-slate-400">
 					Catatan: Hasil yang ditampilkan adalah{" "}
 					<strong>umpan balik latihan mandiri</strong>, bukan penilaian final
-					atau pengganti rapor guru (PRD S-33).
+					atau pengganti rapor guru.
 				</p>
 			</div>
 		</div>

@@ -64,15 +64,45 @@ html.teks-sangat-besar {
 html.teks-besar .text-\[11px\],
 html.teks-besar .text-\[10px\],
 html.teks-besar .text-\[9px\] {
-	font-size: 14px !important;
+	font-size: 13.5px !important;
 	line-height: 1.45 !important;
 }
 
 html.teks-sangat-besar .text-\[11px\],
 html.teks-sangat-besar .text-\[10px\],
 html.teks-sangat-besar .text-\[9px\] {
-	font-size: 16px !important;
+	font-size: 15px !important;
 	line-height: 1.5 !important;
+}
+
+/* Penyesuaian Tata Letak Saat Ukuran Teks Diperbesar */
+html.teks-besar .lg\:grid-cols-4,
+html.teks-sangat-besar .lg\:grid-cols-4 {
+	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+html.teks-sangat-besar .grid-cols-2 {
+	grid-template-columns: 1fr !important;
+}
+
+html.teks-sangat-besar .lg\:col-span-7,
+html.teks-sangat-besar .lg\:col-span-5 {
+	grid-column: span 12 / span 12 !important;
+}
+
+html.teks-sangat-besar .md\:grid-cols-3 {
+	grid-template-columns: 1fr !important;
+}
+
+html.teks-besar button,
+html.teks-sangat-besar button,
+html.teks-besar a,
+html.teks-sangat-besar a {
+	white-space: normal;
+}
+
+html.teks-sangat-besar aside {
+	width: 17.5rem !important;
 }
 
 /* Mode Kontras Tinggi Tema Terang (WCAG 1.4.3 & 1.4.6 High Contrast Light Mode) */
