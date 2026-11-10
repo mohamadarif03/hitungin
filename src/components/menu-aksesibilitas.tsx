@@ -74,7 +74,7 @@ export function MenuAksesibilitas() {
 						<div>
 							<div className="flex items-center gap-1.5 font-bold text-slate-700">
 								<Type className="h-3.5 w-3.5 text-purple-600" />
-								<span>Ukuran Teks (WCAG 1.4.4)</span>
+								<span>Ukuran Teks</span>
 							</div>
 							<div className="mt-1.5 grid grid-cols-3 gap-1.5">
 								{(
@@ -170,7 +170,7 @@ export function MenuAksesibilitas() {
 						{/* Panduan Pintasan Keyboard */}
 						<div className="border-t border-slate-100 pt-3">
 							<p className="text-[11px] font-bold text-slate-700">
-								Pintasan Akses Cepat (WCAG 2.1.1):
+								Pintasan Akses Cepat:
 							</p>
 							<ul className="mt-1 space-y-1 text-[10px] text-slate-500">
 								<li>

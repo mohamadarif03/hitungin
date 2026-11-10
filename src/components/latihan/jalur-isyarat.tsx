@@ -202,8 +202,8 @@ export function JalurIsyarat({ onTerbaca, onGantiJalur }: Props) {
 					</div>
 
 					<p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-						Privasi terjamin (N-41): Gambar kamera diproses langsung di browser
-						dan <strong>tidak pernah dikirim atau disimpan</strong> di server.
+						Privasi terjamin: Gambar kamera diproses langsung di browser dan{" "}
+						<strong>tidak pernah dikirim atau disimpan</strong> di server.
 					</p>
 
 					<div className="mt-3 flex flex-wrap gap-2">

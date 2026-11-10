@@ -363,7 +363,7 @@ export function JalurSuara({ onTerbaca, onGantiJalur }: Props) {
 			{tahap === "izin" && (
 				<div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
 					<p className="text-xs font-semibold text-slate-800">
-						Sebelum merekam suara (S-07, S-24)
+						Sebelum merekam suara
 					</p>
 					<p className="mt-1 text-[11px] leading-relaxed text-slate-600">
 						Rekaman hanya dimulai setelah kamu menekan Mulai rekam. Saat

@@ -34,7 +34,7 @@ export function IsyaratAngkaMateri() {
 				<div className="flex items-center gap-2">
 					<Hand className="h-4 w-4 text-[#8b5cf6]" aria-hidden="true" />
 					<h2 className="text-sm font-bold text-slate-800">
-						Belajar Isyarat Angka 0–9 (S-15)
+						Belajar Isyarat Angka 0–9
 					</h2>
 				</div>
 				<div className="flex items-center gap-1.5">
@@ -82,7 +82,7 @@ export function IsyaratAngkaMateri() {
 
 						<div className="mt-3 rounded-lg bg-white p-3 border border-slate-200">
 							<p className="text-[11px] font-semibold text-slate-600">
-								Tips mempraktikkan di depan kamera (S-25):
+								Tips mempraktikkan di depan kamera:
 							</p>
 							<p className="mt-0.5 text-[11px] text-slate-500">
 								Pastikan telapak tangan tegak menghadap kamera dan semua jari
