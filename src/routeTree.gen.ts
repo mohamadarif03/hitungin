@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as GuruRouteImport } from './routes/guru'
 import { Route as MasukRouteImport } from './routes/masuk'
 import { Route as TamuRouteImport } from './routes/tamu'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -21,6 +22,11 @@ import { Route as AppTugasIndexRouteImport } from './routes/_app/tugas/index'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuruRoute = GuruRouteImport.update({
+  id: '/guru',
+  path: '/guru',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MasukRoute = MasukRouteImport.update({
@@ -66,6 +72,7 @@ const AppTugasIndexRoute = AppTugasIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/guru': typeof GuruRoute
   '/masuk': typeof MasukRoute
   '/tamu': typeof TamuRoute
   '/latihan/sesi': typeof AppLatihanSesiRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/tugas/': typeof AppTugasIndexRoute
 }
 export interface FileRoutesByTo {
+  '/guru': typeof GuruRoute
   '/masuk': typeof MasukRoute
   '/tamu': typeof TamuRoute
   '/': typeof AppIndexRoute
@@ -87,6 +95,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
+  '/guru': typeof GuruRoute
   '/masuk': typeof MasukRoute
   '/tamu': typeof TamuRoute
   '/_app/': typeof AppIndexRoute
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/guru'
     | '/masuk'
     | '/tamu'
     | '/latihan/sesi'
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/tugas/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/guru'
     | '/masuk'
     | '/tamu'
     | '/'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_app'
+    | '/guru'
     | '/masuk'
     | '/tamu'
     | '/_app/'
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
+  GuruRoute: typeof GuruRoute
   MasukRoute: typeof MasukRoute
   TamuRoute: typeof TamuRoute
 }
@@ -143,6 +156,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guru': {
+      id: '/guru'
+      path: '/guru'
+      fullPath: '/guru'
+      preLoaderRoute: typeof GuruRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/masuk': {
@@ -226,6 +246,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
+  GuruRoute: GuruRoute,
   MasukRoute: MasukRoute,
   TamuRoute: TamuRoute,
 }
