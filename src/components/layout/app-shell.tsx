@@ -1,13 +1,13 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import {
 	BookOpen,
-	User,
-	Hand,
 	Calculator,
 	ClipboardList,
+	Hand,
 	Home,
 	Maximize,
 	Minimize,
+	User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
@@ -16,7 +16,13 @@ import { useAuthStore } from "@/datas/stores/auth-store";
 import { cn } from "@/lib/utils";
 
 const MENU = [
-	{ to: "/", label: "Beranda", ikon: Home, lencana: undefined, tepat: true },
+	{
+		to: "/beranda",
+		label: "Beranda",
+		ikon: Home,
+		lencana: undefined,
+		tepat: true,
+	},
 	{
 		to: "/materi",
 		label: "Materi Belajar",
@@ -42,7 +48,6 @@ const MENU = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
 	const siswa = useAuthStore((state) => state.siswa);
-	const navigate = useNavigate();
 	const jalur = useRouterState({ select: (state) => state.location.pathname });
 	const [layarPenuh, setLayarPenuh] = useState(false);
 	const isMateriPage = jalur === "/materi";
@@ -88,7 +93,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 				.catch(() => setLayarPenuh(true));
 		}
 	}
-
 
 	return (
 		<div className="min-h-dvh bg-[#f8f9fb] text-slate-700 antialiased">
@@ -166,7 +170,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 				</aside>
 
 				<div className="flex min-w-0 flex-1 flex-col">
-					<header className={cn("sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 sm:px-6", isMateriPage && "hidden md:flex")}>
+					<header
+						className={cn(
+							"sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 sm:px-6",
+							isMateriPage && "hidden md:flex",
+						)}
+					>
 						<div className="flex min-w-0 items-center gap-2">
 							<span className="flex items-center gap-2 md:hidden">
 								<LogoHitungin className="h-6 w-6" />
@@ -223,7 +232,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 							"flex-1",
 							isMateriPage
 								? "p-0 pb-28 md:px-6 md:pt-5 md:pb-8"
-								: "px-4 pt-5 pb-24 sm:px-6 md:pb-8"
+								: "px-4 pt-5 pb-24 sm:px-6 md:pb-8",
 						)}
 					>
 						{children}
@@ -239,12 +248,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 				>
 					{/* Beranda */}
 					<Link
-						to="/"
+						to="/beranda"
 						activeOptions={{ exact: true }}
 						className="flex flex-col items-center justify-center px-3 py-1 text-slate-500 transition hover:text-[#7C4DFF] data-[status=active]:text-[#7C4DFF]"
 					>
 						<Home className="h-5 w-5" aria-hidden="true" />
-						{jalur === "/" && (
+						{jalur === "/beranda" && (
 							<span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#7C4DFF]" />
 						)}
 					</Link>
@@ -296,7 +305,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 	);
 }
 
-function LogoHitungin({ className }: { className?: string }) {
+export function LogoHitungin({ className }: { className?: string }) {
 	return (
 		<svg
 			className={cn(className)}

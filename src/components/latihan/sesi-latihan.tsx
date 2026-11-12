@@ -578,7 +578,7 @@ function RingkasanSesi({
 					</Link>
 				) : (
 					<Link
-						to="/"
+						to="/beranda"
 						className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-2xs hover:bg-slate-50"
 					>
 						Kembali ke beranda

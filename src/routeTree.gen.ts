@@ -9,17 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as GuruRouteImport } from './routes/guru'
+import { Route as LandingRouteImport } from './routes/landing'
 import { Route as MasukRouteImport } from './routes/masuk'
 import { Route as TamuRouteImport } from './routes/tamu'
-import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppBerandaRouteImport } from './routes/_app/beranda'
 import { Route as AppLatihanIndexRouteImport } from './routes/_app/latihan/index'
 import { Route as AppLatihanSesiRouteImport } from './routes/_app/latihan/sesi'
 import { Route as AppMateriIndexRouteImport } from './routes/_app/materi/index'
 import { Route as AppMateriLevelIdRouteImport } from './routes/_app/materi/$levelId'
 import { Route as AppTugasIndexRouteImport } from './routes/_app/tugas/index'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -27,6 +34,11 @@ const AppRoute = AppRouteImport.update({
 const GuruRoute = GuruRouteImport.update({
   id: '/guru',
   path: '/guru',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingRoute = LandingRouteImport.update({
+  id: '/landing',
+  path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MasukRoute = MasukRouteImport.update({
@@ -39,9 +51,9 @@ const TamuRoute = TamuRouteImport.update({
   path: '/tamu',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AppBerandaRoute = AppBerandaRouteImport.update({
+  id: '/beranda',
+  path: '/beranda',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLatihanIndexRoute = AppLatihanIndexRouteImport.update({
@@ -71,10 +83,12 @@ const AppTugasIndexRoute = AppTugasIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AppIndexRoute
+  '/': typeof IndexRoute
   '/guru': typeof GuruRoute
+  '/landing': typeof LandingRoute
   '/masuk': typeof MasukRoute
   '/tamu': typeof TamuRoute
+  '/beranda': typeof AppBerandaRoute
   '/latihan/sesi': typeof AppLatihanSesiRoute
   '/materi/$levelId': typeof AppMateriLevelIdRoute
   '/latihan/': typeof AppLatihanIndexRoute
@@ -82,10 +96,12 @@ export interface FileRoutesByFullPath {
   '/tugas/': typeof AppTugasIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/guru': typeof GuruRoute
+  '/landing': typeof LandingRoute
   '/masuk': typeof MasukRoute
   '/tamu': typeof TamuRoute
-  '/': typeof AppIndexRoute
+  '/beranda': typeof AppBerandaRoute
   '/latihan/sesi': typeof AppLatihanSesiRoute
   '/materi/$levelId': typeof AppMateriLevelIdRoute
   '/latihan': typeof AppLatihanIndexRoute
@@ -94,11 +110,13 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/guru': typeof GuruRoute
+  '/landing': typeof LandingRoute
   '/masuk': typeof MasukRoute
   '/tamu': typeof TamuRoute
-  '/_app/': typeof AppIndexRoute
+  '/_app/beranda': typeof AppBerandaRoute
   '/_app/latihan/sesi': typeof AppLatihanSesiRoute
   '/_app/materi/$levelId': typeof AppMateriLevelIdRoute
   '/_app/latihan/': typeof AppLatihanIndexRoute
@@ -110,8 +128,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/guru'
+    | '/landing'
     | '/masuk'
     | '/tamu'
+    | '/beranda'
     | '/latihan/sesi'
     | '/materi/$levelId'
     | '/latihan/'
@@ -119,10 +139,12 @@ export interface FileRouteTypes {
     | '/tugas/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/guru'
+    | '/landing'
     | '/masuk'
     | '/tamu'
-    | '/'
+    | '/beranda'
     | '/latihan/sesi'
     | '/materi/$levelId'
     | '/latihan'
@@ -130,11 +152,13 @@ export interface FileRouteTypes {
     | '/tugas'
   id:
     | '__root__'
+    | '/'
     | '/_app'
     | '/guru'
+    | '/landing'
     | '/masuk'
     | '/tamu'
-    | '/_app/'
+    | '/_app/beranda'
     | '/_app/latihan/sesi'
     | '/_app/materi/$levelId'
     | '/_app/latihan/'
@@ -143,14 +167,23 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   GuruRoute: typeof GuruRoute
+  LandingRoute: typeof LandingRoute
   MasukRoute: typeof MasukRoute
   TamuRoute: typeof TamuRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -163,6 +196,13 @@ declare module '@tanstack/react-router' {
       path: '/guru'
       fullPath: '/guru'
       preLoaderRoute: typeof GuruRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/landing': {
+      id: '/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/masuk': {
@@ -179,11 +219,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TamuRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/': {
-      id: '/_app/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AppIndexRouteImport
+    '/_app/beranda': {
+      id: '/_app/beranda'
+      path: '/beranda'
+      fullPath: '/beranda'
+      preLoaderRoute: typeof AppBerandaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/latihan/': {
@@ -225,7 +265,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute
+  AppBerandaRoute: typeof AppBerandaRoute
   AppLatihanSesiRoute: typeof AppLatihanSesiRoute
   AppMateriLevelIdRoute: typeof AppMateriLevelIdRoute
   AppLatihanIndexRoute: typeof AppLatihanIndexRoute
@@ -234,7 +274,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppIndexRoute: AppIndexRoute,
+  AppBerandaRoute: AppBerandaRoute,
   AppLatihanSesiRoute: AppLatihanSesiRoute,
   AppMateriLevelIdRoute: AppMateriLevelIdRoute,
   AppLatihanIndexRoute: AppLatihanIndexRoute,
@@ -245,8 +285,10 @@ const AppRouteChildren: AppRouteChildren = {
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   GuruRoute: GuruRoute,
+  LandingRoute: LandingRoute,
   MasukRoute: MasukRoute,
   TamuRoute: TamuRoute,
 }

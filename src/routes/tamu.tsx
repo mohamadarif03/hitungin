@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { JalurIsyarat } from "@/components/latihan/jalur-isyarat";
 import { SesiLatihan } from "@/components/latihan/sesi-latihan";
 import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
 import { useAksesibilitasStore } from "@/datas/stores/aksesibilitas-store";
@@ -40,7 +39,11 @@ function HalamanTamu() {
 		<div className="min-h-dvh bg-[#f8f9fb] text-slate-700 antialiased">
 			<header className="border-b border-slate-100 bg-white">
 				<div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
-					<span className="flex items-center gap-2">
+					<Link
+						to="/"
+						className="flex items-center gap-2 hover:opacity-85 transition"
+						title="Kembali ke Halaman Utama"
+					>
 						<svg
 							className="h-6 w-6"
 							viewBox="0 0 32 32"
@@ -73,7 +76,7 @@ function HalamanTamu() {
 						<span className="rounded-full border border-amber-100 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
 							Mode tamu
 						</span>
-					</span>
+					</Link>
 					<div className="flex items-center gap-2.5">
 						<MenuAksesibilitas />
 						<Link

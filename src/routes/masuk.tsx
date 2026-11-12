@@ -73,7 +73,8 @@ function HalamanMasuk() {
 	const judulRef = useRef<HTMLHeadingElement>(null);
 
 	useEffect(() => {
-		if (siswa && kodePemulihan === "") navigate({ to: "/", replace: true });
+		if (siswa && kodePemulihan === "")
+			navigate({ to: "/beranda", replace: true });
 	}, [siswa, kodePemulihan, navigate]);
 
 	// Kode pemulihan hanya tampil sekali: pindahkan fokus ke judul agar pembaca
@@ -136,14 +137,26 @@ function HalamanMasuk() {
 		<div className="min-h-dvh bg-[#f8f9fb] px-4 py-10 text-slate-700 antialiased sm:px-6 lg:flex lg:flex-col lg:justify-center lg:py-6">
 			<div className="mx-auto grid w-full max-w-5xl gap-4 lg:grid-cols-[1.1fr_400px] lg:items-start lg:gap-5">
 				<Card className="p-6">
-					<span className="flex items-center gap-2.5">
-						<span className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50">
-							<LogoHitungin className="h-6 w-6" />
-						</span>
-						<span className="text-[15px] font-bold tracking-tight text-slate-800">
-							HITUNGIN
-						</span>
-					</span>
+					<div className="flex items-center justify-between">
+						<Link
+							to="/"
+							className="inline-flex items-center gap-2.5 hover:opacity-85 transition group"
+							title="Kembali ke Halaman Utama"
+						>
+							<span className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 group-hover:scale-105 transition">
+								<LogoHitungin className="h-6 w-6" />
+							</span>
+							<span className="text-[15px] font-bold tracking-tight text-slate-800">
+								HITUNGIN
+							</span>
+						</Link>
+						<Link
+							to="/"
+							className="text-xs font-semibold text-purple-600 hover:text-purple-800 hover:underline flex items-center gap-1"
+						>
+							&larr; Halaman Utama
+						</Link>
+					</div>
 
 					<p className="mt-6 max-w-[20ch] text-[26px] font-bold leading-[1.15] tracking-[-0.02em] text-slate-800 sm:text-[30px]">
 						Matematika, dengan caramu sendiri.
@@ -301,10 +314,16 @@ function HalamanMasuk() {
 									autoComplete={
 										mode === "masuk" ? "current-password" : "new-password"
 									}
-									placeholder={mode === "masuk" ? "Bebas / opsional" : "4 sampai 6 angka"}
+									placeholder={
+										mode === "masuk" ? "Bebas / opsional" : "4 sampai 6 angka"
+									}
 									value={pin}
 									onChange={(peristiwa) =>
-										setPin(mode === "masuk" ? peristiwa.target.value : peristiwa.target.value.replace(/[^0-9]/g, ""))
+										setPin(
+											mode === "masuk"
+												? peristiwa.target.value
+												: peristiwa.target.value.replace(/[^0-9]/g, ""),
+										)
 									}
 									galat={galat.pin}
 								/>

@@ -38,6 +38,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		<html lang="id">
 			<head>
 				<HeadContent />
+				<script
+					src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
+					crossOrigin="anonymous"
+				/>
+				<script
+					src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+					crossOrigin="anonymous"
+				/>
+				<script
+					src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"
+					crossOrigin="anonymous"
+				/>
 			</head>
 			<body>
 				{children}
