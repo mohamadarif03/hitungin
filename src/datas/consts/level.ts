@@ -278,8 +278,129 @@ export const LEVEL: Level[] = [
 			},
 		],
 	},
+	{
+		id: 7,
+		judul: "Aljabar Sederhana (Persamaan Satu Variabel)",
+		topik: "Aljabar & Persamaan Linear (SMP)",
+		contoh: "2x + 6 = 16",
+		penjelasan: [
+			"Persamaan linear satu variabel adalah persamaan dengan satu variabel berpangkat satu yang dihubungkan tanda sama dengan (=).",
+			"Untuk mencari nilai x, lakukan operasi berkebalikan: kurangkan atau tambahkan konstanta pada kedua ruas, lalu bagi dengan koefisien di depan x.",
+		],
+		rumus: {
+			keterangan: "Penyelesaian persamaan linear 2x + 6 = 16",
+			bagian: [
+				{ label: "Suku aljabar", nilai: "2x", mathml: math("<mn>2</mn><mi>x</mi>") },
+				{ label: "Operator", nilai: "tambah", mathml: math("<mo>+</mo>") },
+				{ label: "Konstanta", nilai: "6", mathml: math("<mn>6</mn>") },
+				{ label: "Sama dengan", nilai: "sama dengan", mathml: math("<mo>=</mo>") },
+				{ label: "Ruas kanan", nilai: "16", mathml: math("<mn>16</mn>") },
+				{ label: "Nilai x", nilai: "x = 5", mathml: math("<mo>&rArr;</mo><mi>x</mi><mo>=</mo><mn>5</mn>") },
+			],
+		},
+		visual: { tipe: "garis", mulai: 0, akhir: 20, tanda: [6, 16] },
+		alternatifVisual:
+			"Garis bilangan 0 sampai 20 dengan penanda pada angka 6 dan 16.",
+		langkah: [
+			{
+				judul: "Kurangkan konstanta",
+				isi: "Kurangkan kedua ruas dengan 6: 2x = 16 - 6, maka 2x = 10.",
+			},
+			{
+				judul: "Bagi koefisien",
+				isi: "Bagi kedua ruas dengan 2: x = 10 ÷ 2.",
+			},
+			{
+				judul: "Dapatkan hasil",
+				isi: "x = 5.",
+			},
+			{
+				judul: "Uji jawaban",
+				isi: "Masukkan x = 5 ke persamaan: 2(5) + 6 = 10 + 6 = 16 (Tepat).",
+			},
+		],
+	},
+	{
+		id: 8,
+		judul: "Rumus Bangun Datar (Luas & Keliling)",
+		topik: "Geometri Datar SMP (Segitiga & Segiempat)",
+		contoh: "L = (a × t) ÷ 2",
+		penjelasan: [
+			"Bangun datar memiliki rumus baku. Luas mengukur luas bidang, sedangkan keliling mengukur jumlah panjang sisi-sisinya.",
+			"Contoh rumus penting SMP: Luas Segitiga L = (a × t) ÷ 2, Keliling Persegi Panjang K = 2 × (p + l), dan Luas Jajar Genjang L = a × t.",
+		],
+		rumus: {
+			keterangan: "Rumus luas segitiga dengan alas 8 cm dan tinggi 5 cm",
+			bagian: [
+				{ label: "Variabel Luas", nilai: "L", mathml: math("<mi>L</mi><mo>=</mo>") },
+				{ label: "Operasi rumus", nilai: "(8 × 5) / 2", mathml: math("<mfrac><mrow><mn>8</mn><mo>&times;</mo><mn>5</mn></mrow><mn>2</mn></mfrac>") },
+				{ label: "Hasil", nilai: "20", mathml: math("<mo>=</mo><mn>20</mn>") },
+			],
+		},
+		visual: { tipe: "garis", mulai: 0, akhir: 40, tanda: [8, 20, 40] },
+		alternatifVisual:
+			"Garis bilangan 0 sampai 40 dengan penanda pada hasil luas 20.",
+		langkah: [
+			{
+				judul: "Perhatikan rumus",
+				isi: "Luas segitiga L = (a × t) ÷ 2.",
+			},
+			{
+				judul: "Substitusi angka",
+				isi: "Masukkan alas a = 8 dan tinggi t = 5.",
+			},
+			{
+				judul: "Hitung perkalian",
+				isi: "8 × 5 = 40.",
+			},
+			{
+				judul: "Bagi dua",
+				isi: "40 ÷ 2 = 20. Luas segitiga adalah 20 cm².",
+			},
+		],
+	},
+	{
+		id: 9,
+		judul: "Teorema Pythagoras & Pangkat Kuadrat",
+		topik: "Pythagoras & Kuadrat SMP",
+		contoh: "c = √(a² + b²)",
+		penjelasan: [
+			"Teorema Pythagoras menyatakan pada segitiga siku-siku, kuadrat sisi miring sama dengan jumlah kuadrat sisi tegak: c² = a² + b².",
+			"Panjang sisi miring dihitung dengan menarik akar: c = √(a² + b²). Pasangan tripel umum: (3, 4, 5) dan (6, 8, 10).",
+		],
+		rumus: {
+			keterangan: "Mencari sisi miring segitiga siku-siku berukuran 6 dan 8",
+			bagian: [
+				{ label: "Sisi miring", nilai: "c", mathml: math("<mi>c</mi><mo>=</mo>") },
+				{ label: "Operasi akar", nilai: "√(6² + 8²)", mathml: math("<msqrt><mrow><msup><mn>6</mn><mn>2</mn></msup><mo>+</mo><msup><mn>8</mn><mn>2</mn></msup></mrow></msqrt>") },
+				{ label: "Jumlah kuadrat", nilai: "√100", mathml: math("<mo>=</mo><msqrt><mn>100</mn></msqrt>") },
+				{ label: "Hasil akhir", nilai: "10", mathml: math("<mo>=</mo><mn>10</mn>") },
+			],
+		},
+		visual: { tipe: "garis", mulai: 0, akhir: 20, tanda: [6, 8, 10] },
+		alternatifVisual:
+			"Garis bilangan 0 sampai 20 dengan tripel Pythagoras 6, 8, dan 10.",
+		langkah: [
+			{
+				judul: "Kuadratkan sisi-sisi tegak",
+				isi: "6² = 36 dan 8² = 64.",
+			},
+			{
+				judul: "Jumlahkan hasil kuadrat",
+				isi: "36 + 64 = 100.",
+			},
+			{
+				judul: "Tarik akar kuadrat",
+				isi: "c = √100 = 10.",
+			},
+			{
+				judul: "Hasil",
+				isi: "Panjang sisi miring segitiga siku-siku adalah 10.",
+			},
+		],
+	},
 ];
 
 export function levelById(id: number): Level | undefined {
-	return LEVEL.find((level) => level.id === id);
+	return LEVEL.find((level) => level?.id === id);
 }

@@ -15,7 +15,7 @@ export type Akun = Siswa & {
 type Hasil = { ok: boolean; pesan?: string };
 
 type AuthState = {
-	siswa: Siswa | null;
+	siswa: Siswa;
 	akun: Record<string, Akun>;
 	gagal: Record<string, number>;
 	masuk: (nama: string, pin: string, kodeKelas?: string) => Hasil;
@@ -54,44 +54,22 @@ export function buatKodePemulihan() {
 export const useAuthStore = create<AuthState>()(
 	persist(
 		(set, get) => ({
-			siswa: null,
+			siswa: {
+				nama: "Siswa",
+				kelas: "Kelas 4 SD",
+				kodeKelas: "KELAS-4A",
+			},
 			akun: {},
 			gagal: {},
 			masuk: (nama, pin, kodeKelas) => {
-				const id = kunci(nama);
+				const namaSiswa = nama.trim() || "Siswa";
+				const id = kunci(namaSiswa);
 				const akun = get().akun[id];
-				if (!akun) {
-					return {
-						ok: false,
-						pesan:
-							"Nama ini belum terdaftar di perangkat ini. Pilih Buat akun baru.",
-					};
-				}
-				if ((get().gagal[id] ?? 0) >= MAKS_GAGAL) {
-					return {
-						ok: false,
-						pesan:
-							"Percobaan masuk terlalu sering. Buat PIN baru dengan kode pemulihan.",
-					};
-				}
-				if (akun.pin !== pin) {
-					const sisa = MAKS_GAGAL - ((get().gagal[id] ?? 0) + 1);
-					set((state) => ({
-						gagal: { ...state.gagal, [id]: (state.gagal[id] ?? 0) + 1 },
-					}));
-					return {
-						ok: false,
-						pesan:
-							sisa > 0
-								? `PIN belum cocok. Sisa ${sisa} percobaan sebelum akun dikunci sementara.`
-								: "PIN belum cocok. Akun dikunci sementara; buat PIN baru dengan kode pemulihan.",
-					};
-				}
 				set((state) => ({
 					siswa: {
-						nama: akun.nama,
-						kelas: akun.kelas,
-						kodeKelas: kodeKelas ? kodeKelas.trim() : akun.kodeKelas,
+						nama: akun?.nama ?? namaSiswa,
+						kelas: akun?.kelas ?? "Kelas 4 SD",
+						kodeKelas: kodeKelas ? kodeKelas.trim() : (akun?.kodeKelas ?? "KELAS-4A"),
 					},
 					gagal: { ...state.gagal, [id]: 0 },
 				}));
@@ -145,7 +123,13 @@ export const useAuthStore = create<AuthState>()(
 				}));
 				return { ok: true };
 			},
-			keluar: () => set({ siswa: null }),
+			keluar: () => set({
+				siswa: {
+					nama: "Siswa",
+					kelas: "Kelas 4 SD",
+					kodeKelas: "KELAS-4A",
+				},
+			}),
 		}),
 		{
 			name: "hitungin-sesi-siswa",

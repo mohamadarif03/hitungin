@@ -1,10 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
 	BookOpen,
+	User,
+	Hand,
 	Calculator,
 	ClipboardList,
 	Home,
-	LogOut,
 	Maximize,
 	Minimize,
 } from "lucide-react";
@@ -20,7 +21,7 @@ const MENU = [
 		to: "/materi",
 		label: "Materi Belajar",
 		ikon: BookOpen,
-		lencana: "6 Level",
+		lencana: "9 Level (SD & SMP)",
 		tepat: false,
 	},
 	{
@@ -41,10 +42,10 @@ const MENU = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
 	const siswa = useAuthStore((state) => state.siswa);
-	const keluar = useAuthStore((state) => state.keluar);
 	const navigate = useNavigate();
 	const jalur = useRouterState({ select: (state) => state.location.pathname });
 	const [layarPenuh, setLayarPenuh] = useState(false);
+	const isMateriPage = jalur === "/materi";
 	const ukuranTeks = useAksesibilitasStore((state) => state.ukuranTeks);
 	const kontrasTinggi = useAksesibilitasStore((state) => state.kontrasTinggi);
 
@@ -88,10 +89,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 		}
 	}
 
-	function keluarAkun() {
-		keluar();
-		navigate({ to: "/masuk", replace: true });
-	}
 
 	return (
 		<div className="min-h-dvh bg-[#f8f9fb] text-slate-700 antialiased">
@@ -165,19 +162,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 								</span>
 							</span>
 						</div>
-						<button
-							type="button"
-							onClick={keluarAkun}
-							className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-[13px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
-						>
-							<LogOut className="h-4 w-4" aria-hidden="true" />
-							Keluar
-						</button>
 					</div>
 				</aside>
 
 				<div className="flex min-w-0 flex-1 flex-col">
-					<header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 sm:px-6">
+					<header className={cn("sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 sm:px-6", isMateriPage && "hidden md:flex")}>
 						<div className="flex min-w-0 items-center gap-2">
 							<span className="flex items-center gap-2 md:hidden">
 								<LogoHitungin className="h-6 w-6" />
@@ -230,33 +219,79 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
 					<main
 						id="main-content"
-						className="flex-1 px-4 pt-5 pb-24 sm:px-6 md:pb-8"
+						className={cn(
+							"flex-1",
+							isMateriPage
+								? "p-0 pb-28 md:px-6 md:pt-5 md:pb-8"
+								: "px-4 pt-5 pb-24 sm:px-6 md:pb-8"
+						)}
 					>
 						{children}
 					</main>
 				</div>
 			</div>
 
-			{/* Menu bawah untuk HP (PRD bab 6) */}
-			<nav
-				aria-label="Menu utama"
-				className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-100 bg-white md:hidden"
-			>
-				<ul className="flex">
-					{MENU.map((item) => (
-						<li key={item.to} className="flex-1">
-							<Link
-								to={item.to}
-								activeOptions={{ exact: item.tepat }}
-								className="flex h-16 flex-col items-center justify-center gap-1 text-[10px] font-semibold text-slate-500 data-[status=active]:text-[#8b5cf6]"
-							>
-								<item.ikon className="h-5 w-5" aria-hidden="true" />
-								{item.label.split(" ")[0]}
-							</Link>
-						</li>
-					))}
-				</ul>
-			</nav>
+			{/* Menu bawah mengambang untuk HP (sesuai rancangan test.html) */}
+			<div className="fixed bottom-4 left-5 right-5 z-30 md:hidden">
+				<nav
+					aria-label="Menu utama"
+					className="flex items-center justify-around rounded-2xl border border-slate-100 bg-white px-3 py-2 shadow-lg shadow-slate-300/50"
+				>
+					{/* Beranda */}
+					<Link
+						to="/"
+						activeOptions={{ exact: true }}
+						className="flex flex-col items-center justify-center px-3 py-1 text-slate-500 transition hover:text-[#7C4DFF] data-[status=active]:text-[#7C4DFF]"
+					>
+						<Home className="h-5 w-5" aria-hidden="true" />
+						{jalur === "/" && (
+							<span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#7C4DFF]" />
+						)}
+					</Link>
+
+					{/* Materi Belajar */}
+					<Link
+						to="/materi"
+						className="flex flex-col items-center justify-center px-3 py-1 text-slate-500 transition hover:text-[#7C4DFF] data-[status=active]:text-[#7C4DFF]"
+					>
+						<BookOpen className="h-5 w-5" aria-hidden="true" />
+						{jalur.startsWith("/materi") && (
+							<span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#7C4DFF]" />
+						)}
+					</Link>
+
+					{/* Tombol Tengah Menonjol: Latihan / Isyarat Cepat */}
+					<Link
+						to="/latihan"
+						className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#7C4DFF] text-white shadow-md shadow-[#7C4DFF]/35 transition hover:bg-[#6839ed]"
+						title="Latihan Mandiri"
+					>
+						<Hand className="h-5 w-5" aria-hidden="true" />
+					</Link>
+
+					{/* Tugas dari Guru */}
+					<Link
+						to="/tugas"
+						className="flex flex-col items-center justify-center px-3 py-1 text-slate-500 transition hover:text-[#7C4DFF] data-[status=active]:text-[#7C4DFF]"
+					>
+						<ClipboardList className="h-5 w-5" aria-hidden="true" />
+						{jalur.startsWith("/tugas") && (
+							<span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#7C4DFF]" />
+						)}
+					</Link>
+
+					{/* Guru / Profil */}
+					<Link
+						to="/guru"
+						className="flex flex-col items-center justify-center px-3 py-1 text-slate-500 transition hover:text-[#7C4DFF] data-[status=active]:text-[#7C4DFF]"
+					>
+						<User className="h-5 w-5" aria-hidden="true" />
+						{jalur.startsWith("/guru") && (
+							<span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#7C4DFF]" />
+						)}
+					</Link>
+				</nav>
+			</div>
 		</div>
 	);
 }

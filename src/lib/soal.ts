@@ -156,6 +156,181 @@ function soalLevel6(): Soal {
 	return soalHitung(6, a, b, "-");
 }
 
+
+/** Level 7: Aljabar linear satu variabel (SMP). */
+function soalLevel7(): Soal {
+	const jenis = Math.random();
+	// Variasi 1: ax + b = c  =>  x = (c - b) / a
+	if (jenis < 0.5) {
+		const a = acak(2, 5);
+		const x = acak(2, 9);
+		const b = acak(2, 12);
+		const c = a * x + b;
+		return {
+			id: `L7-${a}x+${b}=${c}-${Math.random().toString(36).slice(2, 7)}`,
+			level: 7,
+			teks: `Tentukan nilai x dari persamaan rumus: ${a}x + ${b} = ${c}`,
+			bagian: [
+				{ label: "Suku aljabar", nilai: `${a}x`, mathml: math(`<mn>${a}</mn><mi>x</mi>`) },
+				{ label: "Operator", nilai: "ditambah", mathml: math("<mo>+</mo>") },
+				{ label: "Konstanta kiri", nilai: String(b), mathml: math(`<mn>${b}</mn>`) },
+				{ label: "Sama dengan", nilai: "sama dengan", mathml: math("<mo>=</mo>") },
+				{ label: "Ruas kanan", nilai: String(c), mathml: math(`<mn>${c}</mn>`) },
+				{ label: "Nilai x dicari", nilai: "x = ?", mathml: math("<mo>&rArr;</mo><mi>x</mi><mo>=</mo><mtext>?</mtext>") },
+			],
+			jawaban: x,
+			nilaiA: a,
+			nilaiB: b,
+		};
+	}
+	// Variasi 2: ax - b = c  =>  x = (c + b) / a
+	const a = acak(2, 4);
+	const x = acak(3, 10);
+	const b = acak(1, 9);
+	const c = a * x - b;
+	return {
+		id: `L7-${a}x-${b}=${c}-${Math.random().toString(36).slice(2, 7)}`,
+		level: 7,
+		teks: `Tentukan nilai x dari persamaan rumus: ${a}x - ${b} = ${c}`,
+		bagian: [
+			{ label: "Suku aljabar", nilai: `${a}x`, mathml: math(`<mn>${a}</mn><mi>x</mi>`) },
+			{ label: "Operator", nilai: "dikurangi", mathml: math("<mo>&minus;</mo>") },
+			{ label: "Konstanta kiri", nilai: String(b), mathml: math(`<mn>${b}</mn>`) },
+			{ label: "Sama dengan", nilai: "sama dengan", mathml: math("<mo>=</mo>") },
+			{ label: "Ruas kanan", nilai: String(c), mathml: math(`<mn>${c}</mn>`) },
+			{ label: "Nilai x dicari", nilai: "x = ?", mathml: math("<mo>&rArr;</mo><mi>x</mi><mo>=</mo><mtext>?</mtext>") },
+		],
+		jawaban: x,
+		nilaiA: a,
+		nilaiB: b,
+	};
+}
+
+/** Level 8: Rumus Luas & Keliling Bangun Datar SMP. */
+function soalLevel8(): Soal {
+	const jenis = Math.random();
+	// Variasi 1: Luas Segitiga L = (a * t) / 2
+	if (jenis < 0.35) {
+		const a = acak(2, 6) * 2; // genap
+		const t = acak(3, 9);
+		const luas = (a * t) / 2;
+		return {
+			id: `L8-segitiga-${a}x${t}-${Math.random().toString(36).slice(2, 7)}`,
+			level: 8,
+			teks: `Hitung Luas segitiga (L) dengan rumus L = (a × t) ÷ 2, jika alas a = ${a} cm dan tinggi t = ${t} cm.`,
+			bagian: [
+				{ label: "Variabel Luas", nilai: "L", mathml: math("<mi>L</mi><mo>=</mo>") },
+				{
+					label: "Rumus luas",
+					nilai: `(${a} × ${t}) / 2`,
+					mathml: math(`<mfrac><mrow><mn>${a}</mn><mo>&times;</mo><mn>${t}</mn></mrow><mn>2</mn></mfrac>`),
+				},
+				{ label: "Jawaban", nilai: "belum diisi", mathml: math("<mo>=</mo><mtext>?</mtext>") },
+			],
+			jawaban: luas,
+			nilaiA: a,
+			nilaiB: t,
+		};
+	}
+	// Variasi 2: Keliling Persegi Panjang K = 2 * (p + l)
+	if (jenis < 0.7) {
+		const p = acak(6, 14);
+		const l = acak(2, 8);
+		const k = 2 * (p + l);
+		return {
+			id: `L8-keliling-${p}+${l}-${Math.random().toString(36).slice(2, 7)}`,
+			level: 8,
+			teks: `Gunakan rumus K = 2 × (p + l). Jika panjang p = ${p} cm dan lebar l = ${l} cm, berapakah kelilingnya (K)?`,
+			bagian: [
+				{ label: "Variabel Keliling", nilai: "K", mathml: math("<mi>K</mi><mo>=</mo>") },
+				{
+					label: "Operasi rumus",
+					nilai: `2 × (${p} + ${l})`,
+					mathml: math(`<mn>2</mn><mo>&times;</mo><mo>(</mo><mn>${p}</mn><mo>+</mo><mn>${l}</mn><mo>)</mo>`),
+				},
+				{ label: "Jawaban", nilai: "belum diisi", mathml: math("<mo>=</mo><mtext>?</mtext>") },
+			],
+			jawaban: k,
+			nilaiA: p,
+			nilaiB: l,
+		};
+	}
+	// Variasi 3: Luas Jajar Genjang L = a * t
+	const a = acak(4, 11);
+	const t = acak(3, 8);
+	const luas = a * t;
+	return {
+		id: `L8-jajargenjang-${a}x${t}-${Math.random().toString(36).slice(2, 7)}`,
+		level: 8,
+		teks: `Sebuah jajar genjang memiliki alas a = ${a} cm dan tinggi t = ${t} cm. Gunakan rumus L = a × t untuk menghitung luasnya!`,
+		bagian: [
+			{ label: "Variabel Luas", nilai: "L", mathml: math("<mi>L</mi><mo>=</mo>") },
+			{
+				label: "Operasi rumus",
+				nilai: `${a} × ${t}`,
+				mathml: math(`<mn>${a}</mn><mo>&times;</mo><mn>${t}</mn>`),
+			},
+			{ label: "Jawaban", nilai: "belum diisi", mathml: math("<mo>=</mo><mtext>?</mtext>") },
+		],
+		jawaban: luas,
+		nilaiA: a,
+		nilaiB: t,
+	};
+}
+
+/** Level 9: Teorema Pythagoras & Pangkat Kuadrat SMP. */
+function soalLevel9(): Soal {
+	const tripel = [
+		{ a: 3, b: 4, c: 5 },
+		{ a: 6, b: 8, c: 10 },
+		{ a: 5, b: 12, c: 13 },
+		{ a: 9, b: 12, c: 15 },
+		{ a: 8, b: 15, c: 17 },
+	];
+	const pilih = tripel[Math.floor(Math.random() * tripel.length)];
+	const jenis = Math.random();
+
+	// Variasi 1: Cari sisi miring c = √(a² + b²)
+	if (jenis < 0.6) {
+		return {
+			id: `L9-pythagoras-${pilih.a}-${pilih.b}-${Math.random().toString(36).slice(2, 7)}`,
+			level: 9,
+			teks: `Segitiga siku-siku memiliki sisi tegak a = ${pilih.a} dan b = ${pilih.b}. Hitung sisi miring c dengan rumus Pythagoras: c = √(a² + b²)!`,
+			bagian: [
+				{ label: "Sisi miring", nilai: "c", mathml: math("<mi>c</mi><mo>=</mo>") },
+				{
+					label: "Rumus akar kuadrat",
+					nilai: `√(${pilih.a}² + ${pilih.b}²)`,
+					mathml: math(`<msqrt><mrow><msup><mn>${pilih.a}</mn><mn>2</mn></msup><mo>+</mo><msup><mn>${pilih.b}</mn><mn>2</mn></msup></mrow></msqrt>`),
+				},
+				{ label: "Hasil", nilai: "belum diisi", mathml: math("<mo>=</mo><mtext>?</mtext>") },
+			],
+			jawaban: pilih.c,
+			nilaiA: pilih.a,
+			nilaiB: pilih.b,
+		};
+	}
+
+	// Variasi 2: Cari sisi tegak b = √(c² - a²)
+	return {
+		id: `L9-pythagoras-tegak-${pilih.c}-${pilih.a}-${Math.random().toString(36).slice(2, 7)}`,
+		level: 9,
+		teks: `Segitiga siku-siku memiliki sisi miring c = ${pilih.c} dan alas a = ${pilih.a}. Hitung sisi tegak b dengan rumus b = √(c² - a²)!`,
+		bagian: [
+			{ label: "Sisi tegak", nilai: "b", mathml: math("<mi>b</mi><mo>=</mo>") },
+			{
+				label: "Rumus akar kuadrat",
+				nilai: `√(${pilih.c}² - ${pilih.a}²)`,
+				mathml: math(`<msqrt><mrow><msup><mn>${pilih.c}</mn><mn>2</mn></msup><mo>&minus;</mo><msup><mn>${pilih.a}</mn><mn>2</mn></msup></mrow></msqrt>`),
+			},
+			{ label: "Hasil", nilai: "belum diisi", mathml: math("<mo>=</mo><mtext>?</mtext>") },
+		],
+		jawaban: pilih.b,
+		nilaiA: pilih.c,
+		nilaiB: pilih.a,
+	};
+}
+
 const PEMBUAT: Record<number, () => Soal> = {
 	1: soalLevel1,
 	2: soalLevel2,
@@ -163,6 +338,9 @@ const PEMBUAT: Record<number, () => Soal> = {
 	4: soalLevel4,
 	5: soalLevel5,
 	6: soalLevel6,
+	7: soalLevel7,
+	8: soalLevel8,
+	9: soalLevel9,
 };
 
 export function buatSoal(level: number, jumlah: number): Soal[] {
@@ -190,6 +368,27 @@ export function petunjuk(soal: Soal, tingkat: number): string {
 		if (tingkat === 2)
 			return `Hitung satu langkah dari ${soal.nilaiA}, ke arah bilangan yang lebih ${soal.teks.includes("sebelum") ? "kecil" : "besar"}.`;
 		return `Jawabannya ${soal.jawaban}.`;
+	}
+		if (soal.level === 7) {
+		if (tingkat <= 1)
+			return "Pindahkan konstanta ke ruas kanan dengan operasi kebalikannya.";
+		if (tingkat === 2)
+			return "Selesaikan pengurangan/penjumlahan di ruas kanan, lalu bagi dengan koefisien di depan x.";
+		return `Nilai x yang memenuhi persamaan tersebut adalah ${soal.jawaban}.`;
+	}
+	if (soal.level === 8) {
+		if (tingkat <= 1)
+			return "Masukkan angka alas, tinggi, atau panjang ke dalam rumus bangun datar.";
+		if (tingkat === 2)
+			return "Kerjakan operasi perkalian terlebih dahulu, lalu lakukan pembagian jika ada.";
+		return `Hasil perhitungan luas atau keliling tersebut adalah ${soal.jawaban}.`;
+	}
+	if (soal.level === 9) {
+		if (tingkat <= 1)
+			return "Hitung nilai kuadrat masing-masing sisi tegak terlebih dahulu.";
+		if (tingkat === 2)
+			return "Jumlahkan atau kurangkan hasil kuadratnya, lalu tarik akar kuadratnya.";
+		return `Hasil perhitungan rumus Pythagoras tersebut adalah ${soal.jawaban}.`;
 	}
 	if (soal.operator === "+") {
 		if (tingkat <= 1)

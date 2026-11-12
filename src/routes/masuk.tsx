@@ -91,6 +91,14 @@ function HalamanMasuk() {
 
 	function kirim(peristiwa: React.FormEvent<HTMLFormElement>) {
 		peristiwa.preventDefault();
+
+		if (mode === "masuk") {
+			setGalat({});
+			masuk(nama.trim() || "Siswa", pin, kodeKelas.trim());
+			navigate({ to: "/", replace: true });
+			return;
+		}
+
 		const kesalahan: Record<string, string> = {};
 		if (nama.trim().length < 2) kesalahan.nama = "Tulis nama minimal 2 huruf.";
 		if (mode === "daftar" && kelas.trim().length < 2)
@@ -105,12 +113,6 @@ function HalamanMasuk() {
 		setGalat(kesalahan);
 		if (Object.keys(kesalahan).length > 0) return;
 
-		if (mode === "masuk") {
-			const hasil = masuk(nama.trim(), pin, kodeKelas.trim());
-			if (!hasil.ok)
-				setGalat({ umum: hasil.pesan ?? "Belum bisa masuk. Coba lagi." });
-			return;
-		}
 		if (mode === "daftar") {
 			const hasil = daftarAkun({
 				nama: nama.trim(),
@@ -299,10 +301,10 @@ function HalamanMasuk() {
 									autoComplete={
 										mode === "masuk" ? "current-password" : "new-password"
 									}
-									placeholder="4 sampai 6 angka"
+									placeholder={mode === "masuk" ? "Bebas / opsional" : "4 sampai 6 angka"}
 									value={pin}
 									onChange={(peristiwa) =>
-										setPin(peristiwa.target.value.replace(/[^0-9]/g, ""))
+										setPin(mode === "masuk" ? peristiwa.target.value : peristiwa.target.value.replace(/[^0-9]/g, ""))
 									}
 									galat={galat.pin}
 								/>

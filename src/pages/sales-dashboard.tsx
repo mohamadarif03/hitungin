@@ -45,6 +45,9 @@ export default function SalesDashboard() {
 					"L4 Kurang s.d 20",
 					"L5 Tmb/Krg s.d 100",
 					"L6 Simpan/Pinjam",
+					"L7 Aljabar SMP",
+					"L8 Bangun Datar",
+					"L9 Pythagoras",
 				];
 				performanceChartInstance = new Chart(perfCtx, {
 					type: "bar",
@@ -55,7 +58,7 @@ export default function SalesDashboard() {
 							{
 								type: "line",
 								label: "Akurasi Jawaban (%)",
-								data: [96, 92, 88, 85, 76, 70],
+								data: [96, 92, 88, 85, 76, 70, 84, 80, 78],
 								borderColor: "#10b981",
 								backgroundColor: "#10b981",
 								borderWidth: 2.2,
@@ -69,7 +72,7 @@ export default function SalesDashboard() {
 							{
 								type: "bar",
 								label: "Soal Benar Mandiri",
-								data: [30, 28, 25, 22, 18, 15],
+								data: [30, 28, 25, 22, 18, 15, 20, 18, 16],
 								backgroundColor: "#8b5cf6",
 								borderRadius: 4,
 								barPercentage: 0.55,
@@ -80,7 +83,7 @@ export default function SalesDashboard() {
 							{
 								type: "bar",
 								label: "Perlu Petunjuk / Ulang",
-								data: [2, 3, 5, 6, 9, 11],
+								data: [2, 3, 5, 6, 9, 11, 4, 5, 6],
 								backgroundColor: "#ec4899",
 								borderRadius: 4,
 								barPercentage: 0.55,

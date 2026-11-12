@@ -86,7 +86,5 @@ export type StatusLevel = "selesai" | "terbuka" | "terkunci";
 export function statusLevel(riwayat: Riwayat[], level: number): StatusLevel {
 	const akurasi = akurasiLevel(riwayat, level);
 	if (akurasi !== null && akurasi >= 80) return "selesai";
-	if (level === 1) return "terbuka";
-	const sebelumnya = akurasiLevel(riwayat, level - 1);
-	return sebelumnya !== null && sebelumnya >= 80 ? "terbuka" : "terkunci";
+	return "terbuka";
 }

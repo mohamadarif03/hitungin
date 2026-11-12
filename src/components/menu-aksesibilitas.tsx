@@ -1,10 +1,14 @@
-import { Accessibility, Sun, Type, Volume2, VolumeX, X } from "lucide-react";
+import { Accessibility, Ear, Sun, Type, Volume2, VolumeX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAksesibilitasStore } from "@/datas/stores/aksesibilitas-store";
 import { ucapkan } from "@/lib/ucapkan";
 
-export function MenuAksesibilitas() {
+export function MenuAksesibilitas({
+	varian = "default",
+}: {
+	varian?: "default" | "mobile-hero";
+}) {
 	const [terbuka, setTerbuka] = useState(false);
 	const ukuranTeks = useAksesibilitasStore((state) => state.ukuranTeks);
 	const kontrasTinggi = useAksesibilitasStore((state) => state.kontrasTinggi);
@@ -34,17 +38,32 @@ export function MenuAksesibilitas() {
 
 	return (
 		<div className="relative">
-			<button
-				type="button"
-				onClick={() => setTerbuka((prev) => !prev)}
-				aria-expanded={terbuka}
-				aria-haspopup="dialog"
-				aria-label="Buka menu aksesibilitas disabilitas"
-				className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-bold text-[#8b5cf6] transition-colors hover:bg-purple-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
-			>
-				<Accessibility className="h-4 w-4" aria-hidden="true" />
-				<span className="hidden sm:inline">Fitur Disabilitas</span>
-			</button>
+			{varian === "mobile-hero" ? (
+				<button
+					type="button"
+					onClick={() => setTerbuka((prev) => !prev)}
+					aria-expanded={terbuka}
+					aria-haspopup="dialog"
+					aria-label="Buka menu aksesibilitas disabilitas"
+					className="relative p-1 text-white transition hover:opacity-80"
+					title="Fitur Disabilitas"
+				>
+					<Ear className="h-6 w-6" aria-hidden="true" />
+					<span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-emerald-400" />
+				</button>
+			) : (
+				<button
+					type="button"
+					onClick={() => setTerbuka((prev) => !prev)}
+					aria-expanded={terbuka}
+					aria-haspopup="dialog"
+					aria-label="Buka menu aksesibilitas disabilitas"
+					className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-bold text-[#8b5cf6] transition-colors hover:bg-purple-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
+				>
+					<Accessibility className="h-4 w-4" aria-hidden="true" />
+					<span className="hidden sm:inline">Fitur Disabilitas</span>
+				</button>
+			)}
 
 			{terbuka && (
 				<div

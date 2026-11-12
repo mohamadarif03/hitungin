@@ -202,3 +202,12 @@ html.kontras-tinggi .border-purple-200 {
 		transition-duration: 0.01ms !important;
 	}
 }
+
+/* Background pattern untuk Hero Mobile (mengadaptasi gaya test.html) */
+.mobile-hero-pattern {
+	background: linear-gradient(135deg, #7C4DFF 0%, #6534FF 100%);
+	background-image: 
+		radial-gradient(circle at 85% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.08) 28%, transparent 28%),
+		radial-gradient(circle at 12% 75%, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 22%, transparent 22%),
+		linear-gradient(135deg, #7C4DFF 0%, #6534FF 100%);
+}
