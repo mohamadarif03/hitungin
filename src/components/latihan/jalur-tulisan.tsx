@@ -197,10 +197,10 @@ export function JalurTulisan({ onTerbaca, onGantiJalur }: Props) {
 				onPointerMove={gambar}
 				onPointerUp={berhenti}
 				onPointerLeave={berhenti}
-				className="h-48 w-full cursor-crosshair touch-none rounded-xl border-2 border-dashed border-slate-300 bg-white shadow-inner transition-colors hover:border-purple-300"
+				className="h-56 w-full cursor-crosshair sm:h-48 touch-none rounded-xl border-2 border-dashed border-slate-300 bg-white shadow-inner transition-colors hover:border-purple-300"
 			/>
 
-			<div className="flex flex-wrap gap-2">
+			<div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
 				<Button ukuran="sm" onClick={periksa} disabled={!adaTulisan}>
 					<PenTool className="mr-1.5 h-3.5 w-3.5" />
 					Periksa tulisan

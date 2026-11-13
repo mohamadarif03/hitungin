@@ -192,3 +192,16 @@ Loaders simplify your data fetching logic dramatically. Check out more informati
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
 
 For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+
+## Versi Mobile dan PWA (siswa)
+
+Antarmuka siswa dibuat mobile-first dan bisa dipasang di layar utama HP sebagai aplikasi (PWA).
+
+- Di HP (di bawah 768px) navigasi memakai menu bawah, di tablet dan laptop memakai sidebar.
+- Tombol dan kontrol sentuh minimal 44px. Kolom isian memakai ukuran 16px agar iPhone tidak memperbesar layar.
+- `public/manifest.webmanifest` mengatur nama, ikon, dan warna aplikasi.
+- `public/sw.js` menyimpan halaman dan aset statis sehingga aplikasi tetap bisa dibuka saat offline. Service worker hanya didaftarkan di build produksi.
+- Ajakan "Pasang aplikasi" muncul otomatis di Android dan desktop. Di iPhone, petunjuk Bagikan lalu Tambah ke Layar Utama ditampilkan.
+
+Untuk menguji PWA, jalankan `npm run build` lalu `npm run preview`, buka lewat HTTPS atau localhost, dan periksa tab Application di DevTools.
+Setiap perubahan besar pada aset di `public/`, naikkan nilai `VERSI` di `public/sw.js`.

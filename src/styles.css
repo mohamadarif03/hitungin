@@ -211,3 +211,51 @@ html.kontras-tinggi .border-purple-200 {
 		radial-gradient(circle at 12% 75%, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.06) 22%, transparent 22%),
 		linear-gradient(135deg, #7C4DFF 0%, #6534FF 100%);
 }
+
+/* ===== Mobile-first untuk siswa (PWA) ===== */
+.pb-safe {
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+html {
+	-webkit-tap-highlight-color: transparent;
+}
+
+body {
+	overscroll-behavior-y: none;
+}
+
+/* Target sentuh minimal 44px (WCAG 2.5.5) pada layar kecil */
+@media (max-width: 767px) {
+	button,
+	[role="button"],
+	label:has(input[type="radio"]),
+	label:has(input[type="checkbox"]) {
+		min-height: 44px;
+	}
+
+	/* Mencegah HP iOS memperbesar layar saat kolom diketuk */
+	input,
+	select,
+	textarea {
+		font-size: 16px;
+	}
+
+	canvas,
+	video {
+		max-width: 100%;
+		height: auto;
+	}
+
+	/* Tabel boleh digeser ke samping tanpa merusak halaman */
+	table {
+		display: block;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+
+	.rumus math {
+		font-size: 1.5rem;
+		max-width: 100%;
+	}
+}

@@ -99,7 +99,7 @@ function HalamanTugas() {
 									</p>
 								</div>
 
-								<div className="mt-3 flex flex-wrap items-center gap-2">
+								<div className="mt-3 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
 									<Link
 										to="/latihan/sesi"
 										search={{

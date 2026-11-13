@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
 import { useAksesibilitasStore } from "@/datas/stores/aksesibilitas-store";
+import { AjakanPasang } from "@/components/pwa/ajakan-pasang";
 import { useAuthStore } from "@/datas/stores/auth-store";
 import { cn } from "@/lib/utils";
 
@@ -235,6 +236,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 								: "px-4 pt-5 pb-24 sm:px-6 md:pb-8",
 						)}
 					>
+						<AjakanPasang />
 						{children}
 					</main>
 				</div>
