@@ -1,534 +1,253 @@
-import { Mic, Volume2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Mic, Square } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-
-/**
- * Pengenalan suara memakai Web Speech API bawaan browser + Web Audio API untuk deteksi sinyal suara.
- * Rekaman dikirim ke layanan browser saat siswa menekan Mulai rekam, dan tidak disimpan aplikasi (N-40, N-42).
- * Bila layanan gagal atau tidak tersedia, siswa diberi pesan jelas dan pilihan jalur lain (S-24, S-31).
- */
-type HasilPengenal = {
-	resultIndex: number;
-	results: {
-		length: number;
-		[index: number]: {
-			isFinal: boolean;
-			[index: number]: { transcript: string };
-		};
-	};
-};
-
-type PengenalSuara = {
-	lang: string;
-	continuous: boolean;
-	interimResults: boolean;
-	start: () => void;
-	stop: () => void;
-	abort: () => void;
-	onresult: ((peristiwa: HasilPengenal) => void) | null;
-	onerror: ((peristiwa: { error: string; message?: string }) => void) | null;
-	onend: (() => void) | null;
-};
-
-type KonstruktorPengenal = new () => PengenalSuara;
-
-/**
- * Mengubah transkripsi bahasa Indonesia menjadi angka (0-100).
- * Contoh: "tiga puluh lima" -> 35, "tiga lima" -> 35, "dua belas" -> 12, "sepuluh" -> 10, "seratus" -> 100.
- */
-export function ambilAngka(transkrip: string): number | null {
-	if (!transkrip) return null;
-	const bersih = transkrip.toLowerCase().trim();
-
-	// 1. Jika sudah ada digit langsung berupa angka
-	const matchDigit = bersih.match(/\b\d+\b/);
-	if (matchDigit) {
-		const parsed = Number.parseInt(matchDigit[0], 10);
-		if (!Number.isNaN(parsed)) return parsed;
-	}
-
-	const KATA_DASAR: Record<string, number> = {
-		nol: 0,
-		kosong: 0,
-		satu: 1,
-		dua: 2,
-		tiga: 3,
-		empat: 4,
-		lima: 5,
-		enam: 6,
-		tujuh: 7,
-		delapan: 8,
-		sembilan: 9,
-	};
-
-	const KATA_KHUSUS: Record<string, number> = {
-		sepuluh: 10,
-		sebelas: 11,
-		seratus: 100,
-	};
-
-	const kata = bersih
-		.replace(/[^a-z0-9\s]/g, " ")
-		.split(/\s+/)
-		.filter(Boolean);
-
-	if (kata.length === 0) return null;
-
-	// Cek kata tunggal khusus
-	if (kata.length === 1 && KATA_KHUSUS[kata[0]] !== undefined) {
-		return KATA_KHUSUS[kata[0]];
-	}
-
-	// Aturan pembentukan bilangan Bahasa Indonesia (0-100)
-	let total = 0;
-	let parsed = false;
-
-	for (let i = 0; i < kata.length; i++) {
-		const k = kata[i];
-
-		if (k === "seratus") {
-			total += 100;
-			parsed = true;
-			continue;
-		}
-
-		if (k === "sepuluh") {
-			total += 10;
-			parsed = true;
-			continue;
-		}
-
-		if (k === "sebelas") {
-			total += 11;
-			parsed = true;
-			continue;
-		}
-
-		if (k === "belas") {
-			if (total > 0 && total < 10) {
-				total = 10 + total;
-				parsed = true;
-			}
-			continue;
-		}
-
-		if (k === "puluh") {
-			if (total > 0 && total < 10) {
-				total = total * 10;
-				parsed = true;
-			}
-			continue;
-		}
-
-		if (KATA_DASAR[k] !== undefined) {
-			const n = KATA_DASAR[k];
-			if (total === 0 && !parsed) {
-				total = n;
-				parsed = true;
-			} else if (total >= 10 && total % 10 === 0) {
-				// misalnya "dua puluh" (20) diikuti "lima" (5) -> 25
-				total += n;
-			} else {
-				// sebutan digit berurutan: "tiga" (3) lalu "lima" (5) -> 35
-				total = Number.parseInt(`${total}${n}`, 10);
-			}
-		}
-	}
-
-	if (parsed) return total;
-
-	// Fallback deretan angka apa pun yang tersisa
-	const deretDigit = bersih.match(/\d+/g);
-	if (deretDigit && deretDigit.length > 0) {
-		return Number.parseInt(deretDigit.join(""), 10);
-	}
-
-	return null;
-}
-
-function ambilPengenal(): KonstruktorPengenal | null {
-	if (typeof window === "undefined") return null;
-	const jendela = window as unknown as {
-		SpeechRecognition?: KonstruktorPengenal;
-		webkitSpeechRecognition?: KonstruktorPengenal;
-	};
-	return jendela.SpeechRecognition ?? jendela.webkitSpeechRecognition ?? null;
-}
+import { RecognitionClient } from "@/lib/ai/client";
 
 type Props = {
 	onTerbaca: (nilai: number) => void;
 	onGantiJalur: () => void;
+	onReset: () => void;
 };
+export { parseIndonesianNumber as ambilAngka } from "@/lib/ai/preprocessing";
 
-export function JalurSuara({ onTerbaca, onGantiJalur }: Props) {
-	const [tahap, setTahap] = useState<
-		"izin" | "merekam" | "memproses" | "terdeteksi" | "gagal"
-	>("izin");
-	const [pesan, setPesan] = useState("");
-	const [transkrip, setTranskrip] = useState("");
-	const [angkaTerdeteksi, setAngkaTerdeteksi] = useState<number | null>(null);
-	const [volumeSuara, setVolumeSuara] = useState(0);
+export function JalurSuara({ onTerbaca, onGantiJalur, onReset }: Props) {
+	const [phase, setPhase] = useState<
+		"idle" | "loading" | "ready" | "recording" | "processing" | "error"
+	>("idle");
+	const [message, setMessage] = useState("");
+	const [transcript, setTranscript] = useState("");
+	const client = useRef<RecognitionClient | null>(null);
+	const stream = useRef<MediaStream | null>(null);
+	const context = useRef<AudioContext | null>(null);
+	const recorder = useRef<AudioWorkletNode | null>(null);
+	const chunks = useRef<Float32Array[]>([]);
+	const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const revision = useRef(0);
+	const mounted = useRef(true);
+	const recording = useRef(false);
+	const starting = useRef(false);
 
-	const pengenal = useRef<PengenalSuara | null>(null);
-	const audioStream = useRef<MediaStream | null>(null);
-	const audioCtx = useRef<AudioContext | null>(null);
-	const animId = useRef<number | null>(null);
-
-	// Bersihkan sumber daya audio dan perekam saat komponen dibongkar
-	useEffect(() => {
-		return () => {
-			hentikanAudioMeter();
-			try {
-				pengenal.current?.abort();
-			} catch {}
-			pengenal.current = null;
-		};
+	const release = useCallback(() => {
+		if (timer.current) clearTimeout(timer.current);
+		timer.current = null;
+		recording.current = false;
+		if (recorder.current) {
+			recorder.current.port.onmessage = null;
+			recorder.current.disconnect();
+			recorder.current = null;
+		}
+		for (const track of stream.current?.getTracks() ?? []) track.stop();
+		stream.current = null;
+		context.current?.close().catch(() => {});
+		context.current = null;
 	}, []);
+	useEffect(() => {
+		mounted.current = true;
+		return () => {
+			mounted.current = false;
+			revision.current++;
+			release();
+			chunks.current = [];
+			client.current?.dispose();
+			client.current = null;
+		};
+	}, [release]);
 
-	function hentikanAudioMeter() {
-		if (animId.current) {
-			cancelAnimationFrame(animId.current);
-			animId.current = null;
-		}
-		if (audioStream.current) {
-			for (const trek of audioStream.current.getTracks()) trek.stop();
-			audioStream.current = null;
-		}
-		if (audioCtx.current && audioCtx.current.state !== "closed") {
-			audioCtx.current.close().catch(() => {});
-			audioCtx.current = null;
-		}
-		setVolumeSuara(0);
-	}
-
-	async function mulaiAudioMeter() {
+	async function load() {
+		const current = ++revision.current;
+		onReset();
+		setPhase("loading");
+		setMessage("Menyiapkan model suara lokal…");
 		try {
-			if (navigator?.mediaDevices?.getUserMedia) {
-				const stream = await navigator.mediaDevices.getUserMedia({
-					audio: true,
-				});
-				audioStream.current = stream;
-
-				const AudioContextClass =
-					window.AudioContext ||
-					(window as unknown as { webkitAudioContext: typeof AudioContext })
-						.webkitAudioContext;
-				if (AudioContextClass) {
-					const ctx = new AudioContextClass();
-					audioCtx.current = ctx;
-					const sumber = ctx.createMediaStreamSource(stream);
-					const analyser = ctx.createAnalyser();
-					analyser.fftSize = 256;
-					sumber.connect(analyser);
-
-					const dataArray = new Uint8Array(analyser.frequencyBinCount);
-					const ukur = () => {
-						analyser.getByteFrequencyData(dataArray);
-						let jumlah = 0;
-						for (let i = 0; i < dataArray.length; i++) {
-							jumlah += dataArray[i];
-						}
-						const rerata = jumlah / dataArray.length;
-						// Skala 0 - 100
-						const tingkat = Math.min(100, Math.round((rerata / 128) * 100));
-						setVolumeSuara(tingkat);
-						animId.current = requestAnimationFrame(ukur);
-					};
-					ukur();
-				}
+			client.current?.dispose();
+			client.current = new RecognitionClient("speech");
+			await client.current.request(
+				{ task: "load" },
+				{
+					timeout: 300000,
+					progress: (event) => {
+						if (mounted.current && current === revision.current)
+							setMessage(event.message);
+					},
+				},
+			);
+			if (mounted.current && current === revision.current) {
+				setPhase("ready");
+				setMessage("Model siap. Tekan Mulai rekam saat ingin menjawab.");
 			}
 		} catch {
-			// Izin mikrofon via getUserMedia opsional, SpeechRecognition mungkin masih jalan mandiri
-		}
-	}
-
-	function mulai() {
-		const Konstruktor = ambilPengenal();
-		setTranskrip("");
-		setAngkaTerdeteksi(null);
-		setPesan("");
-
-		mulaiAudioMeter();
-
-		if (!Konstruktor) {
-			setTahap("gagal");
-			setPesan(
-				"Browser ini tidak menyediakan Web Speech API. Kamu bisa memilih angka di bawah atau ganti ke papan ketik.",
-			);
-			return;
-		}
-
-		try {
-			const alat = new Konstruktor();
-			alat.lang = "id-ID";
-			alat.continuous = true;
-			alat.interimResults = true;
-
-			alat.onresult = (peristiwa) => {
-				let hasilTeks = "";
-				for (let i = peristiwa.resultIndex; i < peristiwa.results.length; i++) {
-					const bagian = peristiwa.results[i]?.[0]?.transcript ?? "";
-					hasilTeks += ` ${bagian}`;
-				}
-				hasilTeks = hasilTeks.trim();
-				if (hasilTeks) {
-					setTranskrip(hasilTeks);
-					const angka = ambilAngka(hasilTeks);
-					if (angka !== null) {
-						setAngkaTerdeteksi(angka);
-						setTahap("terdeteksi");
-						setPesan(`Suara terdeteksi: "${hasilTeks}" (Angka: ${angka})`);
-					}
-				}
-			};
-
-			alat.onerror = (peristiwa) => {
-				hentikanAudioMeter();
-				setTahap("gagal");
-				if (
-					peristiwa.error === "not-allowed" ||
-					peristiwa.error === "service-not-allowed"
-				) {
-					setPesan(
-						"Izin mikrofon ditolak atau dibatasi. Kamu bisa menjawab dengan papan ketik atau tulisan.",
-					);
-				} else if (peristiwa.error === "no-speech") {
-					setPesan(
-						"Belum ada suara yang terdengar. Coba bicara lebih dekat ke mikrofon atau coba lagi.",
-					);
-				} else {
-					setPesan(
-						"Layanan suara browser sedang mengalami gangguan. Gunakan tombol angka di bawah atau papan ketik.",
-					);
-				}
-			};
-
-			alat.onend = () => {
-				hentikanAudioMeter();
-				setTahap((sebelum) => (sebelum === "merekam" ? "izin" : sebelum));
-			};
-
-			pengenal.current = alat;
-			alat.start();
-			setTahap("merekam");
-			setPesan("Mikrofon aktif. Sebutkan angka jawabanmu sekarang...");
-		} catch {
-			hentikanAudioMeter();
-			setTahap("gagal");
-			setPesan(
-				"Mikrofon belum dapat dinyalakan. Coba lagi atau gunakan papan ketik.",
-			);
-		}
-	}
-
-	function selesai() {
-		hentikanAudioMeter();
-		try {
-			pengenal.current?.stop();
-		} catch {}
-
-		if (angkaTerdeteksi !== null) {
-			setTahap("memproses");
-			onTerbaca(angkaTerdeteksi);
-		} else if (transkrip) {
-			const angka = ambilAngka(transkrip);
-			if (angka !== null) {
-				setTahap("memproses");
-				onTerbaca(angka);
-			} else {
-				setTahap("gagal");
-				setPesan(
-					`Terdengar "${transkrip}", namun belum terdeteksi sebagai angka. Coba sebutkan lagi seperti "lima belas" atau "tiga puluh lima".`,
+			client.current?.dispose();
+			client.current = null;
+			if (mounted.current && current === revision.current) {
+				setPhase("error");
+				setMessage(
+					"Model suara belum dapat dimuat. Periksa koneksi atau ruang perangkat, coba lagi, atau gunakan papan ketik.",
 				);
 			}
-		} else {
-			setTahap("gagal");
-			setPesan(
-				"Belum ada suara yang terdeteksi. Silakan coba lagi atau gunakan papan ketik.",
-			);
 		}
 	}
-
-	function kirimAngkaLangsung(n: number) {
-		hentikanAudioMeter();
+	async function start() {
+		if (recording.current || starting.current || !client.current) return;
+		starting.current = true;
+		const current = ++revision.current;
+		onReset();
+		setTranscript("");
+		setMessage("Meminta izin mikrofon…");
 		try {
-			pengenal.current?.stop();
-		} catch {}
-		setTahap("memproses");
-		onTerbaca(n);
+			if (!navigator.mediaDevices?.getUserMedia || !window.AudioWorkletNode)
+				throw new Error("Mikrofon tidak tersedia.");
+			const media = await navigator.mediaDevices.getUserMedia({
+				audio: {
+					channelCount: 1,
+					echoCancellation: true,
+					noiseSuppression: true,
+				},
+			});
+			if (!mounted.current || current !== revision.current) {
+				media.getTracks().forEach((track) => {
+					track.stop();
+				});
+				return;
+			}
+			stream.current = media;
+			const ctx = new AudioContext();
+			context.current = ctx;
+			await ctx.audioWorklet.addModule("/audio/pcm-recorder.js");
+			if (!mounted.current || current !== revision.current) {
+				release();
+				return;
+			}
+			const node = new AudioWorkletNode(ctx, "hitungin-pcm");
+			recorder.current = node;
+			chunks.current = [];
+			recording.current = true;
+			node.port.onmessage = ({ data }: MessageEvent<Float32Array>) => {
+				if (recording.current) chunks.current.push(data);
+			};
+			const mute = ctx.createGain();
+			mute.gain.value = 0;
+			ctx.createMediaStreamSource(media).connect(node);
+			node.connect(mute);
+			mute.connect(ctx.destination);
+			await ctx.resume();
+			setPhase("recording");
+			setMessage("Sedang merekam. Ucapkan digit lalu tekan Selesai rekam.");
+			timer.current = setTimeout(() => {
+				void stop();
+			}, 8000);
+		} catch {
+			release();
+			if (mounted.current && current === revision.current) {
+				setPhase("ready");
+				setMessage(
+					"Mikrofon belum dapat diakses. Izinkan mikrofon lalu coba lagi, atau gunakan papan ketik.",
+				);
+			}
+		} finally {
+			starting.current = false;
+		}
 	}
-
+	async function stop() {
+		if (!recording.current) return;
+		const current = revision.current,
+			rate = context.current?.sampleRate ?? 48000;
+		const recordings = chunks.current;
+		chunks.current = [];
+		release();
+		setPhase("processing");
+		setMessage("Mengenali rekaman di perangkat…");
+		try {
+			const length = recordings.reduce((sum, chunk) => sum + chunk.length, 0);
+			if (!length || length / rate > 9) throw new Error("Rekaman kosong.");
+			const offline = new OfflineAudioContext(
+				1,
+				Math.ceil((length * 16000) / rate),
+				16000,
+			);
+			const buffer = offline.createBuffer(1, length, rate);
+			let offset = 0;
+			for (const chunk of recordings) {
+				buffer.getChannelData(0).set(chunk, offset);
+				offset += chunk.length;
+			}
+			const source = offline.createBufferSource();
+			source.buffer = buffer;
+			source.connect(offline.destination);
+			source.start();
+			const rendered = await offline.startRendering();
+			const audio = new Float32Array(rendered.getChannelData(0));
+			if (!mounted.current || current !== revision.current) return;
+			const worker = client.current;
+			if (!worker) throw new Error("Model suara belum siap.");
+			const result = await worker.request(
+				{ task: "transcribe", audio },
+				{ transfer: [audio.buffer], timeout: 60000 },
+			);
+			if (!mounted.current || current !== revision.current) return;
+			setTranscript(result.text);
+			setPhase("ready");
+			if (result.value === null)
+				setMessage(
+					"Suara belum terbaca sebagai bilangan 0–100. Rekam ulang atau gunakan papan ketik.",
+				);
+			else {
+				setMessage(
+					`Terbaca ${result.value}. Periksa hasilnya sebelum mengonfirmasi.`,
+				);
+				onTerbaca(result.value);
+			}
+		} catch {
+			if (mounted.current && current === revision.current) {
+				setPhase("error");
+				setMessage(
+					"Pengenalan suara belum berhasil. Siapkan ulang model dan rekam kembali, atau gunakan papan ketik.",
+				);
+			}
+		}
+	}
 	return (
 		<div className="space-y-3">
-			{tahap === "izin" && (
-				<div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-					<p className="text-xs font-semibold text-slate-800">
-						Sebelum merekam suara
-					</p>
-					<p className="mt-1 text-[11px] leading-relaxed text-slate-600">
-						Rekaman hanya dimulai setelah kamu menekan Mulai rekam. Saat
-						merekam, suara diproses langsung di browser untuk diubah menjadi
-						angka. HITUNGIN tidak menyimpan rekaman suara; hanya angka hasil
-						yang akan dicatat.
-					</p>
-					<div className="mt-3 flex flex-wrap gap-2">
-						<Button ukuran="sm" onClick={mulai}>
-							<Mic className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-							Mulai rekam suara
-						</Button>
-						<Button varian="kedua" ukuran="sm" onClick={onGantiJalur}>
-							Jangan rekam, pakai papan ketik
-						</Button>
-					</div>
-				</div>
+			<p className="text-sm leading-relaxed text-slate-600">
+				Ucapkan digit satu per satu, misalnya “tiga lima” untuk 35. Rekaman
+				maksimal 8 detik diproses di perangkat dan tidak diunggah atau disimpan.
+			</p>
+			{(phase === "idle" || phase === "error") && (
+				<p className="text-sm text-slate-600">
+					Model suara sekitar 300 MB diunduh sekali saat disiapkan. Gunakan
+					koneksi yang sesuai dan pastikan ada ruang penyimpanan.
+				</p>
 			)}
-
-			{tahap === "merekam" && (
-				<div className="rounded-lg border border-purple-200 bg-purple-50/70 p-4">
-					<div className="flex items-center justify-between gap-2">
-						<div className="flex items-center gap-2">
-							<span className="relative flex h-3 w-3">
-								<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75" />
-								<span className="relative inline-flex h-3 w-3 rounded-full bg-purple-600" />
-							</span>
-							<p className="text-xs font-bold text-purple-900">
-								Sedang mendengarkan... Sebutkan angkanya!
-							</p>
-						</div>
-						<div
-							className="flex items-center gap-1"
-							aria-label={`Indikator volume suara: ${volumeSuara}%`}
-						>
-							<Volume2 className="h-3.5 w-3.5 text-purple-600" />
-							<div className="h-2 w-16 overflow-hidden rounded-full bg-purple-200">
-								<div
-									className="h-full bg-purple-600 transition-all duration-75"
-									style={{ width: `${Math.max(8, volumeSuara)}%` }}
-								/>
-							</div>
-						</div>
-					</div>
-
-					<p className="mt-2 text-[11px] text-slate-600">
-						Contoh: ucapkan &quot;tiga puluh lima&quot;, &quot;tiga lima&quot;,
-						atau &quot;sepuluh&quot;.
-					</p>
-
-					{transkrip && (
-						<div className="mt-2 rounded-md bg-white p-2.5 shadow-xs border border-purple-100">
-							<p className="text-[11px] font-semibold text-slate-500">
-								Kata yang terdengar:
-							</p>
-							<p className="text-sm font-bold text-purple-700">
-								&quot;{transkrip}&quot;
-							</p>
-						</div>
-					)}
-
-					{angkaTerdeteksi !== null && (
-						<div className="mt-2 flex items-center justify-between rounded-md bg-emerald-50 p-2.5 border border-emerald-200">
-							<span className="text-xs font-semibold text-emerald-800">
-								Terdeteksi angka:{" "}
-								<strong className="text-base text-emerald-700">
-									{angkaTerdeteksi}
-								</strong>
-							</span>
-							<Button ukuran="sm" onClick={selesai}>
-								Gunakan {angkaTerdeteksi}
-							</Button>
-						</div>
-					)}
-
-					<div className="mt-3 flex flex-wrap gap-2">
-						<Button ukuran="sm" onClick={selesai}>
-							Selesai merekam
-						</Button>
-						<Button
-							varian="kedua"
-							ukuran="sm"
-							onClick={() => {
-								hentikanAudioMeter();
-								try {
-									pengenal.current?.abort();
-								} catch {}
-								setTahap("izin");
-								setPesan("Perekaman suara dibatalkan.");
-							}}
-						>
-							Batalkan
-						</Button>
-					</div>
-				</div>
-			)}
-
-			{tahap === "terdeteksi" && (
-				<div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-3">
-					<p className="text-xs font-bold text-emerald-800">
-						Suara berhasil terdeteksi sebagai angka: {angkaTerdeteksi}
-					</p>
-					<p className="mt-1 text-[11px] text-slate-600">
-						Tekan tombol di bawah untuk mengirim ke konfirmasi jawaban.
-					</p>
-					<div className="mt-2 flex flex-wrap gap-2">
-						<Button
-							ukuran="sm"
-							onClick={() => {
-								if (angkaTerdeteksi !== null) {
-									setTahap("memproses");
-									onTerbaca(angkaTerdeteksi);
-								}
-							}}
-						>
-							Kirim angka {angkaTerdeteksi}
-						</Button>
-						<Button varian="kedua" ukuran="sm" onClick={mulai}>
-							Ucapkan ulang
-						</Button>
-					</div>
-				</div>
-			)}
-
-			{tahap === "memproses" && (
-				<output className="block rounded-lg bg-slate-50 p-3 text-xs font-medium text-slate-600">
-					Memeriksa hasil rekaman suara...
-				</output>
-			)}
-
-			{tahap === "gagal" && (
-				<div className="rounded-lg border border-rose-100 bg-rose-50/70 p-3 space-y-2">
-					<p className="text-xs font-semibold text-rose-700">{pesan}</p>
-					<p className="text-[11px] text-slate-600">
-						Jika perangkat tidak mendukung pengenalan suara otomatis, kamu bisa
-						langsung memilih simulasi angka di bawah atau berganti ke papan
-						ketik:
-					</p>
-					<div className="flex flex-wrap gap-1.5 pt-1">
-						{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 35].map(
-							(val) => (
-								<button
-									key={val}
-									type="button"
-									onClick={() => kirimAngkaLangsung(val)}
-									className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-bold text-slate-700 hover:border-purple-400 hover:bg-purple-50"
-								>
-									{val}
-								</button>
-							),
-						)}
-					</div>
-					<div className="mt-3 flex flex-wrap gap-2">
-						<Button ukuran="sm" varian="kedua" onClick={mulai}>
-							Coba rekam lagi
-						</Button>
-						<Button ukuran="sm" onClick={onGantiJalur}>
-							Ganti ke papan ketik
-						</Button>
-					</div>
-				</div>
-			)}
-
-			{pesan && tahap !== "gagal" && tahap !== "merekam" && (
-				<output className="block text-[11px] text-slate-500">{pesan}</output>
+			<div className="flex flex-wrap gap-2">
+				{(phase === "idle" || phase === "error") && (
+					<Button onClick={load}>Siapkan model suara lokal</Button>
+				)}
+				{phase === "ready" && (
+					<Button onClick={start}>
+						<Mic className="h-4 w-4" aria-hidden="true" />
+						Mulai rekam
+					</Button>
+				)}
+				{phase === "recording" && (
+					<Button onClick={stop}>
+						<Square className="h-4 w-4" aria-hidden="true" />
+						Selesai rekam
+					</Button>
+				)}
+				<Button varian="halus" onClick={onGantiJalur}>
+					Pakai papan ketik
+				</Button>
+			</div>
+			<output
+				aria-live="polite"
+				className="block min-h-6 text-sm text-slate-600"
+			>
+				{message}
+			</output>
+			{transcript && (
+				<p className="text-sm text-slate-600">
+					Transkrip:{" "}
+					<span className="font-medium text-slate-800">{transcript}</span>
+				</p>
 			)}
 		</div>
 	);

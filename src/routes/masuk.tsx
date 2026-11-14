@@ -28,7 +28,7 @@ const JALUR = [
 	{
 		ikon: Hand,
 		label: "Isyarat angka",
-		cara: "Tunjukkan jumlahnya dengan jari di depan kamera.",
+		cara: "Tunjukkan digit BISINDO di depan kamera.",
 	},
 	{
 		ikon: PenTool,

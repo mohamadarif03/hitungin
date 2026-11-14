@@ -1,0 +1,8 @@
+{
+  "max_abs_error": 5.7220458984375e-06,
+  "cpu_onnx_p50_p95_ms": [
+    0.7281529999545455,
+    0.9323192998408558
+  ],
+  "browser_benchmarked": false
+}

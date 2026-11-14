@@ -1,3 +1,21 @@
+# HITUNGIN
+
+Integrasi tiga model lokal: BISINDO (MediaPipe + MLP), tulisan bilangan utuh
+(CNN + BiGRU + CTC), dan suara Indonesia (Whisper ONNX int8).
+
+- [Notebook Indonesia CRISP-DM, cover UB dan hasil Colab](notebooks/README.md)
+- [Menjalankan aplikasi, kontrak model, pengujian dan batas PoC](docs/local-ai.md)
+- [Dataset publik dan ketentuan sumber](notebooks/DATASETS.md)
+
+```bash
+npm ci --ignore-scripts
+npm run dev
+```
+
+Model siap pakai tersedia di `public/models/`. Unduhan suara sekitar 300 MB
+hanya dimulai saat pengguna menyiapkannya. Hasil AI dikonfirmasi sebelum
+penilaian matematika, dan papan ketik selalu tersedia.
+
 Welcome to your new TanStack Start app!
 
 # Getting Started

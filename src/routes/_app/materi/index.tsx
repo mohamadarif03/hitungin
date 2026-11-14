@@ -14,8 +14,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { LEVEL } from "@/datas/consts/level";
 import { useAuthStore } from "@/datas/stores/auth-store";
 import {
@@ -146,10 +144,12 @@ function PetaMateri() {
 							<div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#7C4DFF] text-white shadow-sm transition group-hover:scale-105">
 								<Sparkles className="h-5 w-5" aria-hidden="true" />
 							</div>
-							<span className="text-xs font-medium text-slate-600">Latihan</span>
+							<span className="text-xs font-medium text-slate-600">
+								Latihan
+							</span>
 						</Link>
 
-						{/* Aksi 2: Isyarat SIBI (0-9) */}
+						{/* Aksi 2: Isyarat BISINDO (0-9) */}
 						<Link
 							to="/materi/$levelId"
 							params={{ levelId: "1" }}
@@ -159,7 +159,7 @@ function PetaMateri() {
 								<Hand className="h-5 w-5" aria-hidden="true" />
 							</div>
 							<span className="text-xs font-medium text-slate-600">
-								Isyarat SIBI
+								Isyarat BISINDO
 							</span>
 						</Link>
 
@@ -263,9 +263,9 @@ function PetaMateri() {
 				<div>
 					<h1 className="text-[19px] font-bold text-slate-900">Peta Materi</h1>
 					<p className="mt-0.5 text-[13px] text-slate-500">
-						Materi matematika interaktif dari konsep dasar SD hingga rumus aljabar
-						dan geometri SMP. Level terbuka setelah level sebelumnya mencapai
-						akurasi minimal 80 persen.
+						Materi matematika interaktif dari konsep dasar SD hingga rumus
+						aljabar dan geometri SMP. Level terbuka setelah level sebelumnya
+						mencapai akurasi minimal 80 persen.
 					</p>
 				</div>
 
@@ -286,7 +286,10 @@ function PetaMateri() {
 											Level {lvl.id}
 										</span>
 										<span className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2.5 py-0.5 text-[11px] font-medium text-slate-600">
-											<Lock className="h-3 w-3 text-slate-400" aria-hidden="true" />
+											<Lock
+												className="h-3 w-3 text-slate-400"
+												aria-hidden="true"
+											/>
 											Terkunci
 										</span>
 									</div>
@@ -294,7 +297,8 @@ function PetaMateri() {
 										{lvl.topik}
 									</h2>
 									<p className="text-xs leading-relaxed text-slate-400">
-										Terbuka setelah Level {lvl.id - 1} mencapai akurasi minimal 80 persen.
+										Terbuka setelah Level {lvl.id - 1} mencapai akurasi minimal
+										80 persen.
 									</p>
 								</div>
 							);
@@ -317,13 +321,13 @@ function PetaMateri() {
 									<h2 className="mb-1 text-[15px] font-bold text-slate-900">
 										{lvl.topik}
 									</h2>
-									<p className="text-xs text-slate-500">
-										Contoh: {lvl.contoh}
-									</p>
+									<p className="text-xs text-slate-500">Contoh: {lvl.contoh}</p>
 								</div>
 								<div className="mt-2 flex items-center justify-between pt-4">
 									<span className="text-[11.5px] font-semibold text-slate-700">
-										{akurasi === null ? "Belum ada latihan" : `Akurasi ${akurasi}%`}
+										{akurasi === null
+											? "Belum ada latihan"
+											: `Akurasi ${akurasi}%`}
 									</span>
 									<Link
 										to="/materi/$levelId"
@@ -339,18 +343,19 @@ function PetaMateri() {
 					})}
 				</div>
 
-				{/* Banner Info 1: Isyarat angka 0-9 (SIBI) */}
+				{/* Banner Info 1: Isyarat angka 0-9 (BISINDO) */}
 				<div className="flex items-center gap-4 rounded-2xl border border-slate-200/75 bg-white p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.04)]">
 					<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
 						<Hand className="h-5 w-5" aria-hidden="true" />
 					</div>
 					<div>
 						<h3 className="text-[13.5px] font-bold text-slate-800">
-							Isyarat angka 0–9 (SIBI)
+							Isyarat angka 0–9 (BISINDO)
 						</h3>
 						<p className="mt-0.5 text-xs text-slate-500">
-							Isyarat angka dijelaskan dengan teks. Saat menjawab soal, gunakan
-							papan ketik, suara, atau tulisan.
+							Pelajari contoh landmark digit BISINDO dari dataset publik. Saat
+							menjawab soal, pilih kamera isyarat, papan ketik, suara, atau
+							tulisan.
 						</p>
 					</div>
 				</div>
