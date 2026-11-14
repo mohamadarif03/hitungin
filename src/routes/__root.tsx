@@ -27,7 +27,12 @@ export const Route = createRootRoute({
 		],
 		links: [
 			{ rel: "manifest", href: "/manifest.webmanifest" },
-			{ rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/icon-192.png" },
+			{
+				rel: "icon",
+				type: "image/png",
+				sizes: "192x192",
+				href: "/icons/icon-192.png",
+			},
 			{ rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
 			{ rel: "stylesheet", href: appCss },
 			{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -50,22 +55,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		<html lang="id">
 			<head>
 				<HeadContent />
-				<script
-					src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
-					crossOrigin="anonymous"
-				/>
-				<script
-					src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
-					crossOrigin="anonymous"
-				/>
-				<script
-					src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"
-					crossOrigin="anonymous"
-				/>
 			</head>
 			<body>
-				{children}
-				<DaftarServiceWorker />
 				{children}
 				<DaftarServiceWorker />
 				<TanStackDevtools

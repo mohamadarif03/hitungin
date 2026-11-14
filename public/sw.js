@@ -1,6 +1,6 @@
 /* HITUNGIN service worker: app shell offline + cache aset statis.
  * Naikkan VERSI setiap kali ada perubahan besar agar cache lama dibersihkan. */
-const VERSI = "hitungin-v1";
+const VERSI = "hitungin-v2-ai-lokal";
 const CACHE_HALAMAN = `${VERSI}-halaman`;
 const CACHE_ASET = `${VERSI}-aset`;
 
@@ -55,6 +55,8 @@ self.addEventListener("fetch", (event) => {
 	if (request.method !== "GET") return;
 	const url = new URL(request.url);
 	if (!bolehDicache(url)) return;
+	// Jangan menyimpan potongan byte sebagai berkas model utuh.
+	if (request.headers.has("range")) return;
 
 	// Navigasi halaman: jaringan dulu, lalu cache, lalu halaman offline.
 	if (request.mode === "navigate") {
@@ -81,6 +83,9 @@ self.addEventListener("fetch", (event) => {
 	if (
 		url.pathname.startsWith("/assets/") ||
 		url.pathname.startsWith("/icons/") ||
+		url.pathname.startsWith("/models/") ||
+		url.pathname.startsWith("/vendor/") ||
+		url.pathname.startsWith("/audio/") ||
 		url.pathname.endsWith(".webmanifest")
 	) {
 		event.respondWith(
@@ -88,7 +93,10 @@ self.addEventListener("fetch", (event) => {
 				const tersimpan = await cache.match(request);
 				if (tersimpan) return tersimpan;
 				const respon = await fetch(request);
-				if (respon.ok) cache.put(request, respon.clone());
+				if (respon.ok) {
+					// Cache boleh gagal saat kuota penuh; inferensi tetap menerima respons.
+					event.waitUntil(cache.put(request, respon.clone()).catch(() => undefined));
+				}
 				return respon;
 			}),
 		);

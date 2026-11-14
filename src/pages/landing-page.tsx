@@ -6,7 +6,6 @@ import {
 	Check,
 	CheckCircle2,
 	ChevronDown,
-	Eraser,
 	Eye,
 	GraduationCap,
 	Hand,
@@ -20,7 +19,10 @@ import {
 	Type,
 	Volume2,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { JalurSuara } from "@/components/latihan/jalur-suara";
+import { JalurTulisan } from "@/components/latihan/jalur-tulisan";
+import { JalurIsyarat } from "@/components/latihan/jalur-isyarat";
 import { LogoHitungin } from "@/components/layout/app-shell";
 import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
 import { LEVEL } from "@/datas/consts/level";
@@ -49,7 +51,7 @@ const JALUR_INFO: Record<
 		target: "Siswa Tunanetra & Low Vision",
 		contohAksi: "Ucapkan: 'Dua Puluh'",
 		keunggulan: [
-			"Deteksi angka berbahasa Indonesia alami via Web Speech API",
+			"Pengenalan angka bahasa Indonesia dengan Whisper lokal",
 			"Diproses langsung di browser lokal tanpa dikirim ke server",
 			"Tanpa hitungan mundur yang memicu kecemasan berhitung",
 		],
@@ -58,12 +60,12 @@ const JALUR_INFO: Record<
 		judul: "Jalur Isyarat Tangan",
 		subjudul: "Tunjukkan simbol jari angka di depan kamera.",
 		deskripsi:
-			"Mendukung bahasa isyarat angka standar BISINDO & SIBI (0–9) serta penjumlahan dua tangan. Gambar diproses instan via kecerdasan buatan MediaPipe langsung di peramban.",
+			"Prototipe mengenali angka BISINDO 0–9 dari dataset publik. Gabungkan digit untuk jawaban hingga 100. Gambar diproses instan via kecerdasan buatan MediaPipe langsung di peramban.",
 		target: "Siswa Tuli & Teman Belajar Isyarat",
 		contohAksi: "Tunjukkan jari di kamera",
 		keunggulan: [
-			"Mendukung isyarat angka BISINDO & SIBI satu tangan",
-			"Mendukung hitungan jari dua tangan (misal: 5 kiri + 2 kanan = 7)",
+			"Model angka BISINDO 0–9 dari dataset publik",
+			"Tambahkan digit satu per satu untuk bilangan hingga 100",
 			"Privasi terjamin: feed kamera tidak pernah disimpan atau diunggah",
 		],
 	},
@@ -109,7 +111,7 @@ const FAQ_LIST = [
 	{
 		tanya: "Apakah rekaman suara atau video siswa disimpan di server?",
 		jawab:
-			"Sama sekali tidak. Sesuai prinsip Privasi Lokal Aman, pemrosesan suara (Web Speech API) dan pengenalan isyarat tangan (MediaPipe) berlangsung 100% lokal di browser perangkat Anda. Tidak ada video, foto, atau file audio yang dikirim ke internet.",
+			"Sama sekali tidak. Sesuai prinsip Privasi Lokal Aman, pemrosesan suara (model Whisper lokal) dan pengenalan isyarat tangan (MediaPipe) berlangsung 100% lokal di browser perangkat Anda. Tidak ada video, foto, atau file audio yang dikirim ke internet.",
 	},
 	{
 		tanya: "Bagaimana cara siswa tunanetra belajar secara mandiri?",
@@ -119,7 +121,7 @@ const FAQ_LIST = [
 	{
 		tanya: "Bagaimana cara kerja pengenalan isyarat tangan untuk siswa tuli?",
 		jawab:
-			"Kamera mendeteksi sendi jari secara real-time. Siswa dapat menggunakan isyarat angka satu tangan standar BISINDO/SIBI (0–9) atau berhitung dengan menjumlahkan jari tangan kiri dan kanan. Terdapat kartu panduan visual untuk setiap angka.",
+			"Kamera mendeteksi sendi jari secara real-time. Siswa dapat mencoba isyarat angka BISINDO 0–9 dari dataset publik, lalu menambahkan digit untuk jawaban hingga 100. Terdapat kartu panduan visual untuk setiap angka.",
 	},
 	{
 		tanya: "Bagaimana guru atau orang tua dapat memantau perkembangan siswa?",
@@ -152,9 +154,17 @@ export default function HalamanLanding() {
 	>("belum");
 	const [sedangBicara, setSedangBicara] = useState(false);
 
-	// Canvas ref untuk simulasi tulisan
-	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	const isDrawingRef = useRef(false);
+	const [menungguKonfirmasi, setMenungguKonfirmasi] = useState(false);
+	const resetPengenalan = useCallback(() => {
+		setSimulasiJawaban("");
+		setStatusSimulasi("belum");
+		setMenungguKonfirmasi(false);
+	}, []);
+	const terimaPengenalan = useCallback((nilai: number) => {
+		setSimulasiJawaban(String(nilai));
+		setStatusSimulasi("belum");
+		setMenungguKonfirmasi(true);
+	}, []);
 
 	useEffect(() => {
 		setSiap(true);
@@ -175,62 +185,9 @@ export default function HalamanLanding() {
 		}
 	}, [ukuranTeks, kontrasTinggi]);
 
-	const resetKanvas = useCallback(() => {
-		const canvas = canvasRef.current;
-		if (!canvas) return;
-		const ctx = canvas.getContext("2d");
-		if (!ctx) return;
-		ctx.fillStyle = "#ffffff";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		ctx.lineWidth = 10;
-		ctx.lineCap = "round";
-		ctx.lineJoin = "round";
-		ctx.strokeStyle = "#4338ca";
-	}, []);
-
-	// Inisialisasi kanvas saat beralih ke tab tulisan
-	useEffect(() => {
-		if (activeTab === "tulisan" && canvasRef.current) {
-			resetKanvas();
-		}
-	}, [activeTab, resetKanvas]);
-
-	function handlePointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
-		const canvas = canvasRef.current;
-		if (!canvas) return;
-		const ctx = canvas.getContext("2d");
-		if (!ctx) return;
-		isDrawingRef.current = true;
-		const rect = canvas.getBoundingClientRect();
-		const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
-		const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
-		ctx.beginPath();
-		ctx.moveTo(x, y);
-	}
-
-	function handlePointerMove(e: React.PointerEvent<HTMLCanvasElement>) {
-		if (!isDrawingRef.current) return;
-		const canvas = canvasRef.current;
-		if (!canvas) return;
-		const ctx = canvas.getContext("2d");
-		if (!ctx) return;
-		const rect = canvas.getBoundingClientRect();
-		const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
-		const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
-		ctx.lineTo(x, y);
-		ctx.stroke();
-	}
-
-	function handlePointerUp() {
-		if (!isDrawingRef.current) return;
-		isDrawingRef.current = false;
-		// Setelah pengguna mencoret, otomatis berikan tebakan 20 untuk simulasi
-		if (!simulasiJawaban) {
-			periksaJawaban("20");
-		}
-	}
-
 	function periksaJawaban(nilai: string) {
+		if (!/^\d{1,3}$/.test(nilai.trim()) || Number(nilai) > 100) return;
+		setMenungguKonfirmasi(false);
 		setSimulasiJawaban(nilai);
 		if (nilai.trim() === "20") {
 			setStatusSimulasi("benar");
@@ -494,6 +451,7 @@ export default function HalamanLanding() {
 										key={t.id}
 										type="button"
 										onClick={() => {
+											resetPengenalan();
 											setActiveTab(t.id);
 											setStatusSimulasi("belum");
 											setSimulasiJawaban("");
@@ -546,9 +504,9 @@ export default function HalamanLanding() {
 										<span className="text-slate-400">=</span>
 										<span
 											className={`rounded-lg px-3.5 py-1 border transition-all ${
-												simulasiJawaban === "20"
+												statusSimulasi === "benar"
 													? "bg-emerald-50 border-emerald-400 text-emerald-700"
-													: simulasiJawaban
+													: statusSimulasi === "salah"
 														? "bg-rose-50 border-rose-300 text-rose-700"
 														: "bg-purple-100/70 border-purple-300 text-purple-700"
 											}`}
@@ -649,114 +607,59 @@ export default function HalamanLanding() {
 										{JALUR_INFO[activeTab].deskripsi}
 									</p>
 
-									{/* SPECIFIC INTERACTION BY TAB */}
+									{/* Pengenalan lokal dengan konfirmasi sebelum penilaian. */}
 									{activeTab === "suara" && (
-										<div className="space-y-3 rounded-xl bg-purple-50/50 border border-purple-100 p-4">
-											<p className="text-xs font-semibold text-slate-700">
-												Simulasi input suara:
-											</p>
-											<div className="flex flex-col gap-2">
-												<button
-													type="button"
-													onClick={() => {
-														ucapkan("Dua Puluh");
-														periksaJawaban("20");
-													}}
-													className="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-purple-700 transition"
-												>
-													<Mic className="h-4 w-4" />
-													<span>Ucapkan "Dua Puluh" (Benar)</span>
-												</button>
-
-												<button
-													type="button"
-													onClick={() => {
-														ucapkan("Delapan Belas");
-														periksaJawaban("18");
-													}}
-													className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
-												>
-													<span>Ucapkan "Delapan Belas" (Contoh Salah)</span>
-												</button>
-											</div>
-										</div>
+										<JalurSuara
+											onTerbaca={terimaPengenalan}
+											onReset={resetPengenalan}
+											onGantiJalur={() => {
+												resetPengenalan();
+												setActiveTab("keyboard");
+											}}
+										/>
 									)}
-
 									{activeTab === "isyarat" && (
-										<div className="space-y-3 rounded-xl bg-purple-50/50 border border-purple-100 p-4">
-											<div className="flex items-center justify-between">
-												<p className="text-xs font-semibold text-slate-700">
-													Simulasi deteksi isyarat tangan:
-												</p>
-												<span className="text-[10px] text-purple-700 font-bold bg-purple-100 px-2 py-0.5 rounded-full">
-													MediaPipe Sensor
-												</span>
-											</div>
-											<div className="flex flex-col gap-2">
-												<button
-													type="button"
-													onClick={() => periksaJawaban("20")}
-													className="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-purple-700 transition"
-												>
-													<Hand className="h-4 w-4" />
-													<span>Peragakan Isyarat "20" (10 + 10 Jari)</span>
-												</button>
-
-												<button
-													type="button"
-													onClick={() => periksaJawaban("18")}
-													className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
-												>
-													<span>Peragakan Isyarat "18" (9 + 9 Jari)</span>
-												</button>
-											</div>
-										</div>
+										<JalurIsyarat
+											onTerbaca={terimaPengenalan}
+											onReset={resetPengenalan}
+											onGantiJalur={() => {
+												resetPengenalan();
+												setActiveTab("keyboard");
+											}}
+										/>
 									)}
-
 									{activeTab === "tulisan" && (
-										<div className="space-y-2 rounded-xl bg-slate-50 border border-slate-200 p-3">
-											<div className="flex items-center justify-between text-xs">
-												<span className="font-semibold text-slate-700">
-													Kanvas coret angka:
-												</span>
-												<button
-													type="button"
-													onClick={resetKanvas}
-													className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-purple-600"
-												>
-													<Eraser className="h-3 w-3" />
-													<span>Hapus</span>
-												</button>
-											</div>
-
-											{/* Interactive Mini Drawing Canvas */}
-											<div className="relative h-28 w-full overflow-hidden rounded-lg border border-slate-300 bg-white shadow-inner">
-												<canvas
-													ref={canvasRef}
-													width={320}
-													height={112}
-													className="h-full w-full cursor-crosshair touch-none"
-													onPointerDown={handlePointerDown}
-													onPointerMove={handlePointerMove}
-													onPointerUp={handlePointerUp}
-												/>
-												<div className="pointer-events-none absolute bottom-1 right-2 text-[9px] text-slate-400">
-													Coret angka di area ini
-												</div>
-											</div>
-
-											<div className="flex items-center gap-2 pt-1">
-												<button
-													type="button"
-													onClick={() => periksaJawaban("20")}
-													className="flex-1 rounded-lg bg-purple-600 text-white text-xs font-bold py-1.5 px-3 hover:bg-purple-700 transition text-center"
-												>
-													Kirimkan Angka 20
-												</button>
-											</div>
+										<JalurTulisan
+											onTerbaca={terimaPengenalan}
+											onReset={resetPengenalan}
+											onGantiJalur={() => {
+												resetPengenalan();
+												setActiveTab("keyboard");
+											}}
+										/>
+									)}
+									{menungguKonfirmasi && (
+										<div
+											aria-live="polite"
+											className="rounded-xl border border-purple-200 bg-purple-50 p-4 space-y-3"
+										>
+											<p>Terbaca {simulasiJawaban}. Apakah sudah sesuai?</p>
+											<button
+												type="button"
+												className="min-h-11 rounded-lg bg-purple-700 px-4 text-white"
+												onClick={() => periksaJawaban(simulasiJawaban)}
+											>
+												Ya, benar
+											</button>
+											<button
+												type="button"
+												className="min-h-11 px-4 underline"
+												onClick={resetPengenalan}
+											>
+												Coba lagi
+											</button>
 										</div>
 									)}
-
 									{activeTab === "keyboard" && (
 										<div className="space-y-3 rounded-xl bg-purple-50/50 border border-purple-100 p-4">
 											<p className="text-xs font-semibold text-slate-700">
@@ -782,9 +685,7 @@ export default function HalamanLanding() {
 												/>
 												<button
 													type="button"
-													onClick={() =>
-														periksaJawaban(simulasiJawaban || "20")
-													}
+													onClick={() => periksaJawaban(simulasiJawaban)}
 													className="rounded-lg bg-purple-600 text-white text-xs font-bold px-4 py-2 hover:bg-purple-700 transition"
 												>
 													Kirim
@@ -865,8 +766,8 @@ export default function HalamanLanding() {
 							</div>
 							<div className="mt-4 pt-3 border-t border-slate-100">
 								<span className="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700">
-									<Check className="h-3.5 w-3.5 text-purple-600" /> Web Speech
-									API Bahasa Indonesia
+									<Check className="h-3.5 w-3.5 text-purple-600" /> Whisper
+									lokal Bahasa Indonesia
 								</span>
 							</div>
 						</div>
@@ -881,14 +782,14 @@ export default function HalamanLanding() {
 								</h3>
 								<p className="mt-1.5 text-xs text-slate-600 leading-relaxed">
 									Tunjukkan simbol jari angka di depan kamera. Mendukung bahasa
-									isyarat BISINDO & SIBI satu tangan serta penjumlahan jari
-									tangan kiri dan kanan.
+									isyarat BISINDO 0–9 dari dataset publik. Tambahkan digit untuk
+									membentuk bilangan.
 								</p>
 							</div>
 							<div className="mt-4 pt-3 border-t border-slate-100">
 								<span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700">
-									<Check className="h-3.5 w-3.5 text-emerald-600" /> Standar
-									BISINDO & SIBI
+									<Check className="h-3.5 w-3.5 text-emerald-600" /> Dataset
+									publik BISINDO
 								</span>
 							</div>
 						</div>

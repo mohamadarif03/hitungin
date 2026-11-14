@@ -9,7 +9,7 @@ import {
 	PenTool,
 	Target,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { JalurIsyarat } from "@/components/latihan/jalur-isyarat";
 import { JalurKeyboard } from "@/components/latihan/jalur-keyboard";
 import { JalurSuara } from "@/components/latihan/jalur-suara";
@@ -75,6 +75,11 @@ export function SesiLatihan({
 	const [konfirmasi, setKonfirmasi] = useState<number | null>(null);
 	const [pesan, setPesan] = useState("");
 	const [hasilAkhir, setHasilAkhir] = useState<HasilSesi | null>(null);
+	const batalkanPengenalan = useCallback(() => setKonfirmasi(null), []);
+	const gunakanKeyboard = useCallback(() => {
+		setKonfirmasi(null);
+		setCara("keyboard");
+	}, []);
 	const [petunjukDipakai, setPetunjukDipakai] = useState<
 		Record<string, number>
 	>({});
@@ -121,6 +126,13 @@ export function SesiLatihan({
 	}
 
 	function tanganiHasilTerbaca(angka: number) {
+		if (!Number.isInteger(angka) || angka < 0 || angka > 100) {
+			setKonfirmasi(null);
+			setPesan(
+				"Hasil belum terbaca sebagai bilangan 0–100. Ulangi jawaban atau gunakan papan ketik.",
+			);
+			return;
+		}
 		setKonfirmasi(angka);
 		ucapkan(`Terbaca ${angka}. Konfirmasi apakah hasil ini benar.`);
 	}
@@ -385,21 +397,24 @@ export function SesiLatihan({
 							<JalurSuara
 								key={aktif.id}
 								onTerbaca={tanganiHasilTerbaca}
-								onGantiJalur={() => setCara("keyboard")}
+								onGantiJalur={gunakanKeyboard}
+								onReset={batalkanPengenalan}
 							/>
 						)}
 						{cara === "isyarat" && (
 							<JalurIsyarat
 								key={aktif.id}
 								onTerbaca={tanganiHasilTerbaca}
-								onGantiJalur={() => setCara("keyboard")}
+								onGantiJalur={gunakanKeyboard}
+								onReset={batalkanPengenalan}
 							/>
 						)}
 						{cara === "tulisan" && (
 							<JalurTulisan
 								key={aktif.id}
 								onTerbaca={tanganiHasilTerbaca}
-								onGantiJalur={() => setCara("keyboard")}
+								onGantiJalur={gunakanKeyboard}
+								onReset={batalkanPengenalan}
 							/>
 						)}
 					</div>

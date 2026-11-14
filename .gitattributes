@@ -1,0 +1,7 @@
+# Bobot dan shard external data ONNX adalah biner, termasuk shard tanpa byte NUL awal.
+*.onnx binary
+*.onnx_data* binary
+*.task binary
+public/models/** linguist-generated=true
+tests/fixtures/model-cases.json linguist-generated=true
+src/lib/ai/sign-examples.ts linguist-generated=true

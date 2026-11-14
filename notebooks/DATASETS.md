@@ -1,6 +1,6 @@
 # HITUNGIN public PoC data
 
-Run `python scripts/download_data.py` from the project root (Python 3.10+ and
+Run `python notebooks/tools/download_data.py` from the project root (Python 3.10+ and
 `requests` required). Raw datasets and download archives are excluded from Git.
 The downloader records source URLs, versions, byte counts, and archive SHA-256
 hashes in `download_manifest.json`. Speech source files are downloaded in parallel
@@ -16,8 +16,8 @@ Structural checks are recorded separately in `verification.json`.
 
 ## Usage notes
 
-- This task downloads data only. No models are trained, and synthetic handwriting
-  sequences have not yet been generated.
+- Downloader hanya mengambil data mentah. Training dan pembuatan bilangan
+  sintetis dilakukan oleh notebook di folder ini.
 - BISINDO landmark feature order, coordinate conventions, and normalization must
   match the browser extractor before training/inference. The public publisher
   description is alphabet-focused even though version 3 includes number files.

@@ -72,8 +72,8 @@ aplikasi browser, bukan berarti training ini dilakukan di laptop pengguna.
 - Profil PoC suara menyeimbangkan prefix F/M dari metadata penutur sumber pada
   setiap partisi; ini bukan jaminan keterwakilan usia, aksen, atau kondisi akses.
 - ONNX MLP dan CRNN diperiksa kesetaraannya di ONNX Runtime CPU. Ini bukan
-  benchmark ONNX Runtime Web. Model Whisper final masih checkpoint PyTorch;
-  konversi dan kuantisasi browser merupakan tahap berikutnya.
+  benchmark ONNX Runtime Web. Integrasi browser dan ekspor Whisper int8 dijelaskan
+  di `../docs/local-ai.md`, terpisah dari metrik checkpoint notebook.
 
 ## Sumber dan pemeliharaan
 

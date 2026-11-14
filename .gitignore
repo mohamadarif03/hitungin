@@ -11,3 +11,13 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+
+# Artefak training lokal
+data/raw/
+data/.downloads/
+data/.colab-transfer/
+artifacts/
+.venv*/
+public/vendor/
+playwright-report/
+test-results/
