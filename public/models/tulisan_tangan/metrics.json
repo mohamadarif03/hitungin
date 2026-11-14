@@ -1,0 +1,7 @@
+{
+  "exact_match": 0.876,
+  "cer": 0.06726694915254237,
+  "test_sequences": 1000,
+  "training_seconds": 328.859298673,
+  "real_canvas_evaluated": false
+}

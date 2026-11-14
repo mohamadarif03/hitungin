@@ -21,6 +21,15 @@ export function MenuAksesibilitas({
 		(state) => state.toggleSuaraOtomatis,
 	);
 
+	useEffect(() => {
+		if (!terbuka) return;
+		function tanganiEscape(e: KeyboardEvent) {
+			if (e.key === "Escape") setTerbuka(false);
+		}
+		window.addEventListener("keydown", tanganiEscape);
+		return () => window.removeEventListener("keydown", tanganiEscape);
+	}, [terbuka]);
+
 	// Sinkronisasi kelas CSS ke root documentElement (WCAG 1.4.3 & 1.4.4)
 	useEffect(() => {
 		if (typeof document === "undefined") return;
@@ -69,7 +78,7 @@ export function MenuAksesibilitas({
 				<div
 					role="dialog"
 					aria-label="Pengaturan Aksesibilitas Disabilitas"
-					className="absolute right-0 top-11 z-50 w-72 sm:w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl ring-1 ring-black/5 animate-in fade-in zoom-in-95"
+					className="fixed inset-x-3 top-16 z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-xl ring-1 ring-black/5 sm:absolute sm:inset-x-auto sm:top-11 sm:right-0 sm:max-h-none sm:w-80 sm:overflow-visible"
 				>
 					<div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
 						<div className="flex items-center gap-2">

@@ -1,0 +1,44 @@
+{
+  "bisindo": {
+    "metrics": {
+      "accuracy": 0.9769230769230769,
+      "macro_f1": 0.9755205346635438,
+      "coverage": 1.0,
+      "rejection_rate": 0.0,
+      "accepted_accuracy": 0.9769230769230769,
+      "baseline_accuracy": 0.9846153846153847,
+      "training_seconds": 1.7316780569999537,
+      "test_size": 130,
+      "unseen_signer_evaluation": false,
+      "negative_input_evaluation": false
+    },
+    "archive": "artifacts/bisindo.zip",
+    "verified_files": 13
+  },
+  "tulisan_tangan": {
+    "metrics": {
+      "exact_match": 0.876,
+      "cer": 0.06726694915254237,
+      "test_sequences": 1000,
+      "training_seconds": 328.859298673,
+      "real_canvas_evaluated": false
+    },
+    "archive": "artifacts/tulisan_tangan.zip",
+    "verified_files": 15
+  },
+  "suara_indonesia": {
+    "metrics": {
+      "digit_sequence_exact_match": 1.0,
+      "numeric_cer": 0.0,
+      "wer": 0.0,
+      "rejection_rate": 0.0,
+      "samples": 64,
+      "chosen_model": "fine_tuned",
+      "cardinal_audio_evaluated": false,
+      "child_speech_evaluated": false,
+      "browser_benchmarked": false
+    },
+    "archive": "artifacts/suara_indonesia.zip",
+    "verified_files": 28
+  }
+}

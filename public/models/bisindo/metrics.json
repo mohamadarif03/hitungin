@@ -1,0 +1,12 @@
+{
+  "accuracy": 0.9769230769230769,
+  "macro_f1": 0.9755205346635438,
+  "coverage": 1.0,
+  "rejection_rate": 0.0,
+  "accepted_accuracy": 0.9769230769230769,
+  "baseline_accuracy": 0.9846153846153847,
+  "training_seconds": 1.7316780569999537,
+  "test_size": 130,
+  "unseen_signer_evaluation": false,
+  "negative_input_evaluation": false
+}

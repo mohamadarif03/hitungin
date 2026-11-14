@@ -9,7 +9,7 @@ import {
 	PenTool,
 	Target,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { JalurIsyarat } from "@/components/latihan/jalur-isyarat";
 import { JalurKeyboard } from "@/components/latihan/jalur-keyboard";
 import { JalurSuara } from "@/components/latihan/jalur-suara";
@@ -75,6 +75,11 @@ export function SesiLatihan({
 	const [konfirmasi, setKonfirmasi] = useState<number | null>(null);
 	const [pesan, setPesan] = useState("");
 	const [hasilAkhir, setHasilAkhir] = useState<HasilSesi | null>(null);
+	const batalkanPengenalan = useCallback(() => setKonfirmasi(null), []);
+	const gunakanKeyboard = useCallback(() => {
+		setKonfirmasi(null);
+		setCara("keyboard");
+	}, []);
 	const [petunjukDipakai, setPetunjukDipakai] = useState<
 		Record<string, number>
 	>({});
@@ -121,6 +126,13 @@ export function SesiLatihan({
 	}
 
 	function tanganiHasilTerbaca(angka: number) {
+		if (!Number.isInteger(angka) || angka < 0 || angka > 100) {
+			setKonfirmasi(null);
+			setPesan(
+				"Hasil belum terbaca sebagai bilangan 0–100. Ulangi jawaban atau gunakan papan ketik.",
+			);
+			return;
+		}
 		setKonfirmasi(angka);
 		ucapkan(`Terbaca ${angka}. Konfirmasi apakah hasil ini benar.`);
 	}
@@ -282,7 +294,7 @@ export function SesiLatihan({
 			</Card>
 
 			{benarSaatIni && (
-				<div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4">
+				<div className="flex flex-col gap-3 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
 					<div className="flex items-start gap-2">
 						<CheckCircle2
 							className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600"
@@ -292,7 +304,7 @@ export function SesiLatihan({
 							Benar. Jawaban {jawaban[aktif.id]?.nilai} tepat.
 						</output>
 					</div>
-					<Button onClick={lanjut}>
+					<Button onClick={lanjut} className="w-full sm:w-auto">
 						{indeks + 1 === daftar.length
 							? "Lihat ringkasan sesi"
 							: "Soal berikutnya"}
@@ -316,7 +328,7 @@ export function SesiLatihan({
 							</p>
 						</div>
 					</div>
-					<div className="mt-3 flex flex-wrap gap-2">
+					<div className="mt-3 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
 						<Button
 							varian="kedua"
 							ukuran="sm"
@@ -352,7 +364,7 @@ export function SesiLatihan({
 							Berganti cara tidak menghapus progres sesi. Jalur papan ketik
 							selalu tersedia.
 						</p>
-						<div className="mt-3 flex flex-wrap gap-2">
+						<div className="mt-3 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
 							{CARA.map((item) => (
 								<button
 									key={item.id}
@@ -385,21 +397,24 @@ export function SesiLatihan({
 							<JalurSuara
 								key={aktif.id}
 								onTerbaca={tanganiHasilTerbaca}
-								onGantiJalur={() => setCara("keyboard")}
+								onGantiJalur={gunakanKeyboard}
+								onReset={batalkanPengenalan}
 							/>
 						)}
 						{cara === "isyarat" && (
 							<JalurIsyarat
 								key={aktif.id}
 								onTerbaca={tanganiHasilTerbaca}
-								onGantiJalur={() => setCara("keyboard")}
+								onGantiJalur={gunakanKeyboard}
+								onReset={batalkanPengenalan}
 							/>
 						)}
 						{cara === "tulisan" && (
 							<JalurTulisan
 								key={aktif.id}
 								onTerbaca={tanganiHasilTerbaca}
-								onGantiJalur={() => setCara("keyboard")}
+								onGantiJalur={gunakanKeyboard}
+								onReset={batalkanPengenalan}
 							/>
 						)}
 					</div>
@@ -498,7 +513,7 @@ function RingkasanSesi({
 						? `Petunjuk dipakai ${hasil.petunjuk} kali.`
 						: "Tanpa petunjuk."}
 				</p>
-				<div className="mt-4 grid grid-cols-3 gap-2 text-center">
+				<div className="mt-4 grid grid-cols-3 gap-2 text-center sm:gap-3">
 					<div className="rounded-lg bg-slate-50 p-3">
 						<p className="text-[11px] text-slate-500">Soal dikerjakan</p>
 						<p className="text-lg font-bold text-slate-800">{hasil.total}</p>
@@ -559,7 +574,7 @@ function RingkasanSesi({
 				</div>
 			</Card>
 
-			<div className="flex flex-wrap gap-2">
+			<div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
 				{hasil.daftarSalah.length > 0 && (
 					<Button onClick={onUlangi}>Ulangi soal yang salah</Button>
 				)}
@@ -578,7 +593,7 @@ function RingkasanSesi({
 					</Link>
 				) : (
 					<Link
-						to="/"
+						to="/beranda"
 						className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-2xs hover:bg-slate-50"
 					>
 						Kembali ke beranda

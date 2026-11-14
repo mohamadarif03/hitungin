@@ -8,6 +8,7 @@ type AksesibilitasState = {
 	kontrasTinggi: boolean;
 	suaraOtomatis: boolean;
 	setUkuranTeks: (ukuran: UkuranTeks) => void;
+	setKontrasTinggi: (aktif: boolean) => void;
 	toggleKontrasTinggi: () => void;
 	toggleSuaraOtomatis: () => void;
 };
@@ -19,6 +20,7 @@ export const useAksesibilitasStore = create<AksesibilitasState>()(
 			kontrasTinggi: false,
 			suaraOtomatis: false,
 			setUkuranTeks: (ukuranTeks) => set({ ukuranTeks }),
+			setKontrasTinggi: (kontrasTinggi) => set({ kontrasTinggi }),
 			toggleKontrasTinggi: () =>
 				set((state) => ({ kontrasTinggi: !state.kontrasTinggi })),
 			toggleSuaraOtomatis: () =>

@@ -1,14 +1,23 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { DaftarServiceWorker } from "@/components/pwa/daftar-sw";
 
 export const Route = createRootRoute({
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
-			{ name: "viewport", content: "width=device-width, initial-scale=1" },
+			{
+				name: "viewport",
+				content: "width=device-width, initial-scale=1, viewport-fit=cover",
+			},
+			{ name: "theme-color", content: "#8b5cf6" },
+			{ name: "mobile-web-app-capable", content: "yes" },
+			{ name: "apple-mobile-web-app-capable", content: "yes" },
+			{ name: "apple-mobile-web-app-title", content: "HITUNGIN" },
+			{ name: "apple-mobile-web-app-status-bar-style", content: "default" },
 			{ title: "HITUNGIN — Platform Belajar Matematika Inklusif" },
 			{
 				name: "description",
@@ -17,6 +26,14 @@ export const Route = createRootRoute({
 			},
 		],
 		links: [
+			{ rel: "manifest", href: "/manifest.webmanifest" },
+			{
+				rel: "icon",
+				type: "image/png",
+				sizes: "192x192",
+				href: "/icons/icon-192.png",
+			},
+			{ rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
 			{ rel: "stylesheet", href: appCss },
 			{ rel: "preconnect", href: "https://fonts.googleapis.com" },
 			{
@@ -41,6 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				{children}
+				<DaftarServiceWorker />
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",

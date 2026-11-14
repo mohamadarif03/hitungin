@@ -1,0 +1,137 @@
+{
+  "checkpoint_sha256": "296f2c6fba8785cb05dca0ed06b09f512d0d59eaaaef3a0eced8e763aef13a85",
+  "quantization": "dynamic int8, per channel, MatMul/Gemm/Gather including decoder subgraphs",
+  "files": [
+    {
+      "path": "NOTICE.md",
+      "bytes": 855,
+      "sha256": "fc135c0495993a982bf789b498812aa272c4fe3d2ca1315549cea6c2897defba"
+    },
+    {
+      "path": "UPSTREAM_MODEL_CARD.md",
+      "bytes": 3122,
+      "sha256": "fa493f316db37a79ccc3d713869cad77bfa20ded8428152543c3ddcdd8f439b3"
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 34604,
+      "sha256": "9715fd2243b6f06a5858b5e32950d2853f73dd5bc201aafcf76f5082a2d8acd1"
+    },
+    {
+      "path": "config.json",
+      "bytes": 1382,
+      "sha256": "8dab1be4308c84fec0a1bac31d7eabcac0230257d5261101ed06a26a3113c306"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 3796,
+      "sha256": "af989c4bdf6139209e72f0c506bc9a9622e2f0aecd47c084734d12d72e029c41"
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 493869,
+      "sha256": "2df2990a395e35e8dfbc7511e08c12d56018d8d04691e0133e5d63b21e154dc6"
+    },
+    {
+      "path": "normalizer.json",
+      "bytes": 52666,
+      "sha256": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx",
+      "bytes": 2138336,
+      "sha256": "347cd316a3e7125e39d14f5edc843ec5b635253d386c3838f7115b78ee935d04"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data",
+      "bytes": 632832,
+      "sha256": "fab9b3435799e8b6e1cdda6e9ec85d93f585e19690f1cd42c47d2c760df63f1d"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_1",
+      "bytes": 39832320,
+      "sha256": "62545c1b1e695a66cb24181f8d68e2699f8e7dd45e0883bb6d112fd5d5d0a7e8"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_2",
+      "bytes": 23937024,
+      "sha256": "bff88cefa7a3da599ad47a72a4cb8df49a9671869b6687f8bfb8acfcc52e4dee"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_3",
+      "bytes": 24772608,
+      "sha256": "ee81013d4acca06bc9cc4d9d163a607ea76e10dfb126596da9d2ac006988ccff"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_4",
+      "bytes": 24772608,
+      "sha256": "d8a5ce8b336269feff2c6b271c14d02a26c313ba756f0dd8e33e14188d93ea72"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_5",
+      "bytes": 24772608,
+      "sha256": "898dea96ef89f75257703d74c371f020e35fb351c18d904ef71025ba8efb3717"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_6",
+      "bytes": 15335424,
+      "sha256": "3a2109611bee041bf6bd07cdcc6cbbb5678e9ad833fcb42fe3f6be0f1553fdd2"
+    },
+    {
+      "path": "onnx/decoder_model_merged_quantized.onnx_data_7",
+      "bytes": 39832320,
+      "sha256": "e1e7d50608fa67ff24b5a24864363e61f7d9eb0952cbe04d19cc5b3c39b3786a"
+    },
+    {
+      "path": "onnx/encoder_model_quantized.onnx",
+      "bytes": 708007,
+      "sha256": "fbb68f3d90b70d6aa86d9b4d19095205eb8972ba4d898969c1c0919c43bff0d7"
+    },
+    {
+      "path": "onnx/encoder_model_quantized.onnx_data",
+      "bytes": 24674304,
+      "sha256": "f6f063718cf4e9b4ce84e4f83b621e3ef590ffd3212db3d7fb553fd5b46b545a"
+    },
+    {
+      "path": "onnx/encoder_model_quantized.onnx_data_1",
+      "bytes": 24772608,
+      "sha256": "58dbc8aa69d92b423297a359076942f1875df271d6bd900207ec3f449b7c6ac8"
+    },
+    {
+      "path": "onnx/encoder_model_quantized.onnx_data_2",
+      "bytes": 24772608,
+      "sha256": "7d016455ee52fb4549d2f39c9bd6bc58bc7c4e35e0644765913ca283dbd8a84a"
+    },
+    {
+      "path": "onnx/encoder_model_quantized.onnx_data_3",
+      "bytes": 23592960,
+      "sha256": "53aeadd8ebe4143d87d572e25f3c50eaf411ce8c3dcce13a057ae5ea0e4975e6"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 356,
+      "sha256": "994838f1fa6462c8b9b3c90edada831f11f3dd8b4664634e18f4694d005c9dbf"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 2194,
+      "sha256": "e67ae3a0aaa99abcd9f187138e12db1f65c16a14761c50ef10eef2c174a7a691"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 3930494,
+      "sha256": "7b469ff15eb7816315aa45eec391f5943d639b9d73d110f5c003df5192fd54e3"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 282713,
+      "sha256": "21a4fc0483c14b87f4e0bbc177a9a357479bfa7c95aaf21ad53d71e9c5afafb9"
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 835550,
+      "sha256": "8f680bba319e01a653d2e8a5dbc17a9157179e0576e6ce74ce0c06356c6e24f9"
+    }
+  ],
+  "total_bytes": 300188168
+}

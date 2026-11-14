@@ -206,14 +206,14 @@ function HalamanLatihan() {
 				</ul>
 			</Card>
 
-			<div className="flex flex-wrap items-center gap-2 pb-2">
-				<Button onClick={mulaiBaru}>
+			<div className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center">
+				<Button onClick={mulaiBaru} className="w-full sm:w-auto">
 					Mulai latihan
 					<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
 				</Button>
 				<Link
 					to="/materi"
-					className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 no-underline shadow-2xs hover:bg-slate-50"
+					className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 no-underline shadow-2xs hover:bg-slate-50 sm:w-auto"
 				>
 					Belajar materi dulu
 				</Link>

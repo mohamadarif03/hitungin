@@ -1,0 +1,13 @@
+{
+  "seed": 42,
+  "height": 32,
+  "width": 96,
+  "max_digits": 3,
+  "blank_id": 10,
+  "train_sequences": 20000,
+  "val_sequences": 1000,
+  "test_sequences": 1000,
+  "epochs": 20,
+  "batch_size": 128,
+  "lr": 0.001
+}

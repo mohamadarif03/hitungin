@@ -1,0 +1,14 @@
+{
+  "height": 32,
+  "width": 96,
+  "channels": 1,
+  "polarity": "white_ink_black_background",
+  "layout": "NCHW",
+  "normalization": "float32 / 255; crop ink bbox; aspect-preserving resize; centered padding",
+  "blank_id": 10,
+  "range": [
+    0,
+    100
+  ],
+  "confirmation_required": true
+}
