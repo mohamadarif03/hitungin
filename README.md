@@ -14,7 +14,7 @@
 [![TanStack Start](https://img.shields.io/badge/TanStack-Start%20%26%20Router-FF4154?logo=react-router&logoColor=white)](https://tanstack.com/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind-CSS%20v4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite 8](https://img.shields.io/badge/Vite-8.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Laravel BE](https://img.shields.io/badge/Backend-Laravel%20REST%20API-FF2D20?logo=laravel&logoColor=white)](https://github.com/mohamadarif03/hitungin-be)
+[![Laravel BE](https://img.shields.io/badge/Backend-Laravel%20REST%20API-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
 
 </div>
 
@@ -22,8 +22,7 @@
 
 ## 📌 Tautan Repositori & Layanan
 - **Repositori Frontend (Web App & Edge AI)**: [mohamadarif03/hitungin (Saat ini)](https://github.com/mohamadarif03/hitungin)
-- **Repositori Backend (Laravel REST API)**: [https://github.com/mohamadarif03/hitungin-be](https://github.com/mohamadarif03/hitungin-be)  
-  *Seluruh layanan backend RESTful API, otentikasi Sanctum, manajemen basis data relasional (siswa, kelas, penugasan, dan audit trail) dibangun menggunakan framework **Laravel** dan dapat diakses pada tautan repositori tersebut.*
+- **Layanan Backend**: Menggunakan arsitektur RESTful API berbasis Laravel (otentikasi Sanctum, manajemen siswa, kelas, penugasan, dan audit trail).
 - **Dokumentasi & Riset Model**:
   - [Dokumentasi Integrasi AI Lokal & Kontrak Model](docs/local-ai.md)
   - [Notebook Eksperimen CRISP-DM & Pelatihan Colab](notebooks/README.md)
@@ -122,7 +121,7 @@ flowchart TD
         UI --> Store
     end
 
-    subgraph Backend_Service ["Backend API: Laravel RESTful (hitungin-be)"]
+    subgraph Backend_Service ["Backend API: Laravel RESTful Service"]
         API["Laravel API Endpoints (/api/v1/...)"]
         Auth["Sanctum Authentication"]
         DB[(Database Relasional: MySQL / SQLite)]
@@ -189,11 +188,10 @@ npm run dev
 Aplikasi frontend akan aktif di: **`http://localhost:3000`**
 
 ### 2. Menjalankan Backend (Laravel REST API)
-Layanan backend tersedia secara terpisah di repositori [mohamadarif03/hitungin-be](https://github.com/mohamadarif03/hitungin-be):
+Layanan backend REST API dapat dijalankan dengan langkah berikut:
 ```bash
-# Clone repositori backend Laravel
-git clone https://github.com/mohamadarif03/hitungin-be.git
-cd hitungin-be
+# Pindah ke direktori backend
+cd backend
 
 # Instal dependensi PHP
 composer install
