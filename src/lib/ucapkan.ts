@@ -63,13 +63,13 @@ export function ucapkan(teks: string, selesai?: () => void) {
 		}
 
 		suara.onend = () => {
-			_utteranceAktif = null;
+			if (_utteranceAktif === suara) _utteranceAktif = null;
 			selesai?.();
 		};
 
 		suara.onerror = () => {
 			bunyikanNadaNotifikasi();
-			_utteranceAktif = null;
+			if (_utteranceAktif === suara) _utteranceAktif = null;
 			selesai?.();
 		};
 

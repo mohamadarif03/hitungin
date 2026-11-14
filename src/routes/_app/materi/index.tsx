@@ -14,8 +14,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { MenuAksesibilitas } from "@/components/menu-aksesibilitas";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { LEVEL } from "@/datas/consts/level";
 import { useAuthStore } from "@/datas/stores/auth-store";
 import {

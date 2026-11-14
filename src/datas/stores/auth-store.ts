@@ -31,8 +31,6 @@ type AuthState = {
 	keluar: () => void;
 };
 
-/** Setelah lima PIN salah, akun dikunci sampai PIN dipulihkan (N-50). */
-const MAKS_GAGAL = 5;
 const kunci = (nama: string) => nama.trim().toLowerCase();
 
 export function buatKodePemulihan() {
@@ -61,7 +59,7 @@ export const useAuthStore = create<AuthState>()(
 			},
 			akun: {},
 			gagal: {},
-			masuk: (nama, pin, kodeKelas) => {
+			masuk: (nama, _pin, kodeKelas) => {
 				const namaSiswa = nama.trim() || "Siswa";
 				const id = kunci(namaSiswa);
 				const akun = get().akun[id];
